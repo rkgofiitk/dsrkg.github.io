@@ -27,7 +27,7 @@ Furthermore, an introductory programming course is a requirement across discipli
 
 ### Blog Links
 
-
+### [Trees](https://vikramshilla.blogspot.com/2021/12/trees.html)
 
 ```markdown
 Syntax highlighted code block
