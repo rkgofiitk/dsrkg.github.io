@@ -28,6 +28,12 @@ Furthermore, an introductory programming course is a requirement across discipli
 ### Blog Links
 
 ### [Trees](https://vikramshilla.blogspot.com/2021/12/trees.html)
+### [Circular queue implementation](https://vikramshilla.blogspot.com/2021/12/circular-queue.html)
+### [Qeueus](https://vikramshilla.blogspot.com/2021/12/trees.html)
+### [Implementation of Stacks](https://vikramshilla.blogspot.com/2021/12/trees.html)
+### [Stacks](https://vikramshilla.blogspot.com/2021/12/trees.html)
+### [List implementation](https://vikramshilla.blogspot.com/2021/12/trees.html)
+### [List as ADT](https://vikramshilla.blogspot.com/2021/12/trees.html)
 
 ```markdown
 Syntax highlighted code block
