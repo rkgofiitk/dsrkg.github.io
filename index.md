@@ -28,13 +28,17 @@ Furthermore, an introductory programming course is a requirement across discipli
 ### Blog Links
 
 ### [Trees](https://vikramshilla.blogspot.com/2021/12/trees.html)
-### [Circular queue implementation](https://vikramshilla.blogspot.com/2021/12/circular-queue.html)
-### [Qeueus](https://vikramshilla.blogspot.com/2021/12/trees.html)
+### [Circular queue implementation](https://vikramshilla.blogspot.com/2021/12/circular-queue-implementation-in-c.html)
+### [Qeueus](hhttps://vikramshilla.blogspot.com/2021/12/queues.html)
 ### [Implementation of Stacks](https://vikramshilla.blogspot.com/2021/12/trees.html)
-### [Stacks](https://vikramshilla.blogspot.com/2021/12/trees.html)
-### [List implementation](https://vikramshilla.blogspot.com/2021/12/trees.html)
-### [List as ADT](https://vikramshilla.blogspot.com/2021/12/trees.html)
-
+### [Stacks](https://vikramshilla.blogspot.com/2021/12/the-creation-of-stack-is-simple.html)
+### [Importance of Stack](https://vikramshilla.blogspot.com/2021/11/importance-of-stacks.html)
+### [List implementation](https://vikramshilla.blogspot.com/2021/11/implementation-of-list-operations-in-c.html)
+### [List as ADT](https://vikramshilla.blogspot.com/2021/11/abstract-concept-of-list.html)
+### [Data Types and ADTs](https://vikramshilla.blogspot.com/2021/11/data-types-and-adts.html)
+### [Meaning of Structures](https://vikramshilla.blogspot.com/2021/11/meaning-of-structure.html)
+### [Data Structures](https://vikramshilla.blogspot.com/2021/11/data-structures.html)
+### [Why Coding is Important](https://vikramshilla.blogspot.com/2021/11/why-coding-and-learning-data-structure.html)
 ```markdown
 Syntax highlighted code block
 
