@@ -29,7 +29,7 @@ Furthermore, an introductory programming course is a requirement across discipli
 
 ### [Trees](https://vikramshilla.blogspot.com/2021/12/trees.html)
 ### [Circular queue implementation](https://vikramshilla.blogspot.com/2021/12/circular-queue-implementation-in-c.html)
-### [Qeueus](hhttps://vikramshilla.blogspot.com/2021/12/queues.html)
+### [Qeueus](https://vikramshilla.blogspot.com/2021/12/queues.html)
 ### [Implementation of Stacks](https://vikramshilla.blogspot.com/2021/12/trees.html)
 ### [Stacks](https://vikramshilla.blogspot.com/2021/12/the-creation-of-stack-is-simple.html)
 ### [Importance of Stack](https://vikramshilla.blogspot.com/2021/11/importance-of-stacks.html)
