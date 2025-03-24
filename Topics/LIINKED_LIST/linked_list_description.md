@@ -18,4 +18,4 @@ object or node in a linked list. Most programming language provisions for defini
 pointer field is assigne <b>None</b> in Python then it cannot lead to a valid node. Therefore, the end of a linked list is reached
 when a node's next field is <b>None</b>.
 
-    I defined linear data structure for accessing, modifying, and storing objects.  Every object has a successor 
+ 
