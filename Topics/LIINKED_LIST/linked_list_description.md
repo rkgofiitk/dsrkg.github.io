@@ -6,7 +6,7 @@ of objects represented by a linked list. Each node of a linked list has at least
 next as in the figure below. 
 
 <p>
- <img src="./header_node.png" style="width:200;height:200;align:center;">
+ <img src="./header_node.png" style="width:100;height:100;align:center;">
 </p>
 
 The <b>info</b> field stores the object, while <b>next</b> is a pointer to the node that represents the successor object. We can 
