@@ -5,9 +5,8 @@ float or character or as complex as a student record with multiple fields like r
 of objects represented by a linked list. Each node of a linked list has at least two fields: info and
 next as in the figure below. 
 
-<a href="./header_node.pdf"> header node </a>
 <p>
- <img src="./header_node.pdf" style="width:500;height:200;align:center;">
+ <img src="./header_node.png" style="width:500;height:200;align:center;">
 </p>
 
 The <b>info</b> field stores the object, while <b>next</b> is a pointer to the node that represents the successor object. We can 
