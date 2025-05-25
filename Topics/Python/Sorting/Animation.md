@@ -10,3 +10,5 @@ This code is developed for animation of sorting algoirthms. It consists of six a
 6. Heap sort
 
 It generates random numbers between 1-100 and creates bars corresponding to the generate numbers. The width of the bars are adjusted according to available canvas area. The canvas area is part of the main frame that uses an 750x750 box defines using Python tkinter libratry. We have two classes: Widgets and Sidebar. Widgets define header frame, main frame, toggle menu frame and canvas display frame. The header frame is just a ribbon strip on the top of display area. It has a title which is a sort description of the program and contains a icon for expanding sidebar for toggle menu frame. The menu frame has dropdown menu for accessing description of sorting schemes and animation and also allows user to access animation programs for different sorting algorithms. 
+
+The program also provides discussion one each sorting scheme. The user can view pdf file containing the descriotions including logic and time complexity. For executing the full capabilities of the program, the user is advised to produvde pdf files or download them from the repository.
