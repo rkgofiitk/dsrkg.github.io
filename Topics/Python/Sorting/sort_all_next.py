@@ -193,13 +193,8 @@ class Widgets:
             self.btn.place(relx=0.5, y=170, anchor=tk.CENTER)
 
         else: 
-            # The branch opens PDFs or text files
-            if var == "explanation.txt": 
-                # Add this to menu or a button
-                self.display_file()
-            else: 
-                # Assumed to be a PDF key
-                self.open_pdf(var)
+            # Assumed to be a PDF key
+            self.open_pdf(var)
 
     # Display a text file
     def display_file(self): 
@@ -229,91 +224,6 @@ class Widgets:
             self.text_widget.insert(tk.END, f"Error displaying file: {e}")
             self.close_btn.place(relx=0.5, rely=0.95, anchor=tk.S)
 
-
-    # Displays pdf file with scrollbars
-    def open_pdf(self, fx):
-        self.clear_main_content_area() 
-        self.canvas_display_frame.pack(padx=10, pady=(10,70), fill=tk.BOTH)
-                #expand=True) # pady for close_btn
-        self.canvas.delete("all")
-        
-        file_name = "" # Default to avoid UnboundLocalError
-
-        # fx set to file_name mapping logic)
-        if fx == "Qsrt": 
-            file_name = "sample.pdf"
-        elif fx == "Hpsrt": 
-            file_name = "sample.pdf"
-        elif fx == "Mrgsrt": 
-            file_name = "sample.pdf"
-        elif fx == "Bubsrt": 
-            file_name = "Bubblesort-Algorithm.pdf"
-        elif fx == "Insrt": 
-            file_name = "sample.pdf"
-        elif fx == "Bktsrt": 
-            file_name = "sample.pdf"
-        else:  #fx == "About": 
-            file_name = "sample.pdf"
-
-        if not os.path.exists(file_name):
-            self.canvas.create_text(self.canvas.winfo_width()/2 if self.canvas.winfo_width() > 1 else 300,
-                                    self.canvas.winfo_height()/2 if self.canvas.winfo_height() > 1 else 200,
-                                    text=f"File not found: {file_name}", anchor=tk.CENTER)
-            self.close_btn.place(relx=0.5, rely=0.97, anchor=tk.S) 
-            return
-        
-        try:
-            doc = fitz.open(file_name)
-            page_images_pil = []
-            total_height = 0
-            max_width = 0
-            page_padding = 5
-
-            if len(doc) == 0:
-                self.canvas.create_text(self.canvas.winfo_width()/2, 
-                        self.canvas.winfo_height()/2,
-                        text="PDF is empty.", anchor=tk.CENTER)
-                doc.close()
-                self.close_btn.place(relx=0.5, rely=0.97, anchor=tk.S)
-                return
-
-            for page_num in range(len(doc)):
-                page = doc.load_page(page_num)
-                zoom_factor = 1.0
-                mat = fitz.Matrix(zoom_factor, zoom_factor)
-                pix = page.get_pixmap(matrix=mat, alpha=False)
-                img_pil = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
-                page_images_pil.append(img_pil)
-                total_height += img_pil.height
-                if page_num < len(doc) - 1:
-                    total_height += page_padding
-                if img_pil.width > max_width:
-                    max_width = img_pil.width
-            doc.close()
-
-            if not page_images_pil:
-                self.close_btn.place(relx=0.5, rely=0.97, anchor=tk.S)
-                return
-
-            self.pdf_composite_image_pil = Image.new("RGB", (max_width,
-                total_height), "white")
-            current_y = 0
-            for img_pil in page_images_pil:
-                self.pdf_composite_image_pil.paste(img_pil, (0, current_y))
-                current_y += img_pil.height + page_padding
-            self.pdf_image_tk = ImageTk.PhotoImage(self.pdf_composite_image_pil)
-            self.canvas.create_image(0, 0, anchor=tk.NW, image=self.pdf_image_tk)
-            self.canvas.config(scrollregion=(0, 0, max_width, total_height))
-
-        # Display error message if pdf not opened
-        except Exception as e:
-            self.canvas.delete("all")
-            self.canvas.create_text(self.canvas.winfo_width()/2 if self.canvas.winfo_width() > 1 else 300,
-                                    self.canvas.winfo_height()/2 if self.canvas.winfo_height() > 1 else 200,
-                                    text=f"Error opening PDF '{file_name}':\n{e}", anchor=tk.CENTER, justify=tk.CENTER)
-        
-        # Place the close button for the PDF view
-        self.close_btn.place(relx=0.5, rely=0.97, anchor=tk.S)
 
 
     def setup_animation_ui_and_bars(self, sort_method_name):
@@ -1015,13 +925,13 @@ class Widgets:
         self.canvas.delete("all") # Clear previous canvas content
 
         file_name = ""
-        if fx == "Qsrt": file_name = "sample.pdf"
-        elif fx == "Hpsrt": file_name = "sample.pdf"
-        elif fx == "Mrgsrt": file_name = "sample.pdf"
-        elif fx == "Bubsrt": file_name = "Bubblesort-Algorithm.pdf" # Ensure this file exists
-        elif fx == "Insrt": file_name = "sample.pdf"
-        elif fx == "Bktsrt": file_name = "sample.pdf"
-        elif fx == "About": file_name = "sample.pdf" # e.g., "about_app.pdf"
+        if fx == "Qsrt": file_name = "quick_sort_algo.pdf"
+        elif fx == "Hpsrt": file_name = "heap_sort_algo.pdf"
+        elif fx == "Mrgsrt": file_name = "merge_sort_algo.pdf"
+        elif fx == "Bubsrt": file_name = "bubble_sort_algo.pdf" # Ensure this file exists
+        elif fx == "Insrt": file_name = "insertion_sort_algo.pdf"
+        elif fx == "Bktsrt": file_name = "bucket_sort_algo.pdf"
+        elif fx == "About": file_name = "explanation.pdf" # e.g., "about_app.pdf"
         else:
             self.canvas.create_text(self.canvas.winfo_width()/2, 
                     self.canvas.winfo_height()/2,
@@ -1129,31 +1039,6 @@ class Widgets:
         # Original: self.close_btn.configure(command=self.close_file)
         self.close_btn.configure(command=self.close_current_view)
         self.open_pdf("About") # It will use the scrollable PDF viewer
-
-    # In display_file (for text files):
-# In class Widgets:
-    def display_file(self): # This is for "explanation.txt"
-        self.clear_main_content_area()
-        filename = "explanation.txt"
-        try:
-            # explanation.txt file should exists or handle FileNotFoundError
-            if not os.path.exists(filename):
-                self.text_widget.insert(tk.END, f"Error: File '{filename}' not found.")
-            else:
-                with open(filename, 'r') as file:
-                    contents = file.read()
-                    self.text_widget.delete(1.0, tk.END) # Clear previous content
-                    self.text_widget.insert(tk.END, contents)
-            
-            self.text_widget.pack(padx=15, pady=(15, 70), fill="both", expand=True) # pady for close_btn
-            self.close_btn.place(relx=0.5, rely=0.95, anchor=tk.S)
-
-        except Exception as e:
-            # self.text_widget might not be packed yet if error before read
-            self.text_widget.pack(padx=15, pady=(15,70), fill="both", expand=True)
-            self.text_widget.delete(1.0, tk.END)
-            self.text_widget.insert(tk.END, f"Error displaying file: {e}")
-            self.close_btn.place(relx=0.5, rely=0.95, anchor=tk.S)
 
 # Define sidebar menu
 class SidebarMenu:
