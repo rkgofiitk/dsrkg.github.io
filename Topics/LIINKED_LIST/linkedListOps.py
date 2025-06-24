@@ -275,22 +275,3 @@ class LinkedList:
         self.head = prev 
         return 
 
-#ll = LinkedList()
-#ll.multipleInserts(['a','b','c','d','e'])
-#print(ll.search('d'))
-#print(ll.search('f'))
-#print(ll.search('e'))
-#print(ll.search('a'))
-#ll.insertAt('f', 5)
-#print(ll.printList())
-#ll.append(20)
-#ll.append(30)
-#ll.append(40)
-#ll.append(50)
-#ll.append(60)
-#ll.append(70)
-#ll.deleteAt(3)
-#print(ll.printList())
-#print(ll.printList())
-#ll.reverse()
-
