@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+   body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #f0f0f0;
+      flex-direction: column;
+    }
+
+    #output-frame {
+      border: 3px solid #333;
+      border-radius: 8px;
+      background: #fff;
+      padding: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      width: 80vw;
+      height: 60vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    #visual-area {
+      width: 100%;
+      height: 100%;
+    }
+
+    #controls {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    #controls button {
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: bold;
+      border: none;
+      border-radius: 5px;
+      background-color: #007BFF;
+      color: white;
+      cursor: pointer;
+      margin: 5px;
+    }
+
+    #controls button:hover {
+      background-color: #0056b3;
+    }
+
+    #input-area input {
+      padding: 8px;
+      font-size: 14px;
+      width: 200px;
+      margin: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      height: 36px;
+      box-sizing: border-box;
+    }
+    .line {
+      width: 2px;
+      height: 100px;
+      background: blue;
+      display: inline-block;
+      margin: 5px;
+    }
+
+    .link-text {
+      font-size: 12px;
+      font-family: "Courier New", monospace;
+      fill:  steelblue;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    .link-text:hover {
+      fill: darkblue;
+    }
+
+  </style>
+</head>
+<body>
+    <h2> Animation of Queue Operations</h2>
+    <!-- Framed container -->
+  <div id="output-frame">
+   <svg id="visual-area" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+     <!-- Box lines -->
+     <path d="M80 225 L700 225" stroke="gray" fill="none" stroke-width="2"/>
+     <path d="M80 175 L700 175" stroke="gray" fill="none" stroke-width="2"/>
+   </svg>
+ </div> 
+
+  <!-- Controls -->
+  <div id="controls">
+    <button onclick="enqData()">Enqueue</button>
+    <button onclick="deqData()">Dequeue</button>
+  </div>
+
+  <!-- Input area -->
+  <div id="input-area">
+    <input type="text" id="inputValue" placeholder="Enter value">
+  </div>
+
+  <!-- Load libraries -->
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+
+<script>
+
+   const svg = d3.select("#visual-area");
+
+   // Create status message element once, outside <g>
+    svg.append("text")
+       .attr("class", "status-message")
+       .attr("x", 395)
+       .attr("y", 380)
+       .attr("text-anchor", "middle")
+       .attr("fill", "green")
+       .attr("font-family", "Courier New")
+       .attr("font-size", "18px")
+       .attr("font-weight", "bold")
+       .style("opacity", 0);
+
+   // Create empty queue message outside <g>
+   svg.append("text")
+        .attr("class", "empty-placeholder")
+        .attr("x", 400)
+        .attr("y", 170)
+        .attr("text-anchor", "middle")
+        .attr("fill", "gray")
+        .attr("font-size", "20px")
+        .attr("font-family", "Courier New")
+        .text("Empty Queue");
+
+    // Satus message handling function
+    function showStatus(message, color="green") {
+        const status = svg.select("text.status-message");
+        if (status.empty()) {
+          console.warn("Status message element not found");
+          return;
+        }
+
+        status.interrupt()
+          .text(message)
+          .attr("fill", color)
+          .style("opacity", 1)
+          .transition().delay(1500).duration(2500)
+          .style("opacity", 0);
+    } 
+
+    // Draws initially empty Queue frame
+    function drawQueueFrame() {
+      const numberOfLines = 8;   // how many vertical lines you want
+      const spacing = 70;        // distance between lines
+      const startX = 150;        // first line’s x position
+      const yTop = 176;          // top y coordinate
+      const yBottom = 224;       // bottom y coordinate
+
+      for (let i = 0; i < numberOfLines; i++) {
+        const x = startX + i * spacing;
+        svg.append("line")
+          .attr("x1", x)
+          .attr("y1", yTop)
+          .attr("x2", x)
+          .attr("y2", yBottom)
+          .attr("stroke", "gray")
+          .attr("stroke-width", 2);
+      }
+
+      showStatus("Created a new empty queue", "red");
+      svg.select(".empty-placeholder").style("opacity", 1);
+    }
+
+    // Call drawing function for the Queue
+    drawQueueFrame() 
+
+    // Call update to see the initial Queue 
+    updateVisualization([]);
+
+   // Create info box for resources
+   createResourceBox(svg, [
+      { label: "D3.js Homepage", url: "https://d3js.org" },
+      { label: "SVG Basics", url: "https://developer.mozilla.org/docs/Web/SVG" },
+      { label: "Transitions Guide", url: "https://observablehq.com/@d3/learn-d3-transitions" }
+    ]);
+
+    // Resource box definition
+    function createResourceBox(svg, links) {
+      // Remove any existing resource box
+      svg.selectAll("g.info-box").remove();
+
+      // Create group for the box
+      let infoBox = svg.append("g")
+        .attr("class", "info-box")
+        .attr("transform", "translate(580,25)");
+
+      // Background rectangle
+      infoBox.append("rect")
+        .attr("width", 225)
+        .attr("height", 125)
+        .attr("fill", "#f9f9f9")
+        .attr("stroke", "black")
+        .attr("rx", 10)
+        .attr("ry", 10)
+        .attr("pointer-events", "none"); // ✅ don’t block clicks
+
+      // Title
+      infoBox.append("text")
+        .attr("x", 100)
+        .attr("y", 25)
+        .attr("text-anchor", "middle")
+        .attr("font-size", "14px")
+        .attr("font-weight", "bold")
+        .text("Resources");
+
+      // Add each link
+      links.forEach((link, i) => {
+        let linkGroup = infoBox.append("a")
+          .attr("href", link.url)       // ✅ modern browsers use href
+          .attr("target", "_blank");    // open in new tab
+
+        linkGroup.append("text")
+          .attr("x", 10)
+          .attr("y", 50 + i * 20)       // stack links vertically
+          .attr("class", "link-text")
+          .text(link.label);
+      });
+    }
+
+
+    // Enqueue function for drawing queue after insertion 
+    function enqData() {
+      const value = document.getElementById("inputValue").value.trim();
+      if (!value) return;
+      svg.select(".empty-placeholder")
+           .style("opacity", 0);  
+
+      fetch("/enqueue", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ value: value })
+      })
+      .then(response => response.json())
+      .then(result => {
+        // For enqueue, only update (no dequeued item)
+        updateVisualization(result.queue, null, result.enqd);
+        msg = `Enqueuing ${value} is successful`;
+        showStatus(msg, "red");
+
+        if (result.enqd === "Queue is full - enqueue failed") {
+            msg = `Queue is full enqueuing ${value} failed`;
+            showStatus(msg, "red");
+        }
+        //  Clear the field after enqueue attempt
+        (inputValue).value = "";
+      })
+      .catch(err => console.error("Error:", err));
+    }
+
+
+    // Draw queue after deletion 
+    function deqData() {
+      fetch("/dequeue", { method: "POST" })
+        .then(response => response.json())
+        .then(result => {
+          // Always update visualization
+          updateVisualization(result.queue, result.deqd, null);
+          msg = `Dequeuing ${result.deqd} is successful`;
+          showStatus(msg, "gree");
+          // Handle empty stack case
+          if (result.deqd === "Queue is empty - dequeue failed") {
+              msg = `Queue is empty - dequeue failed`;
+              showStatus(msg, "red");
+          }
+        })
+        .catch(err => console.error("Error:", err));
+    }
+
+
+
+    function updateVisualization(data, deqdItem=null, enqdItem=null) {
+
+      // --- NODES ---
+      const nodes = svg.selectAll("rect.node").data(data, d => d);
+
+      // EXIT (dequeue): animate left out
+      nodes.exit()
+        .transition().duration(800)
+        .attr("x", -100)   // move off left edge
+        .style("opacity", 0)
+        .remove();
+
+      // ENTER (enqueue): start at right edge, slide to position
+      nodes.enter()
+        .append("rect")
+        .attr("class", "node")
+        .attr("width", 60)
+        .attr("height", 30)
+        .attr("y", 185)          // center between your vertical lines
+        .attr("x", 750)          // start at right edge
+        .attr("fill", "steelblue")
+        .merge(nodes)
+        .transition().duration(800)
+        .attr("x", (d, i) => 85 + i * 70);   // final slot positions
+
+      // --- LABELS ---
+      const labels = svg.selectAll("text.label").data(data, d => d);
+
+      labels.exit()
+        .transition().duration(800)
+        .attr("x", -100)
+        .style("opacity", 0)
+        .remove();
+
+      labels.enter()
+        .append("text")
+        .attr("class", "label")
+        .attr("y", 205)          // baseline inside rect
+        .attr("x", 750 + 30)     // start at right edge, centered in rect
+        .attr("text-anchor", "middle")
+        .attr("fill", "white")
+        .attr("font-family", "Courier New")
+        .attr("font-size", "14px")
+        .attr("font-weight", "bold")
+        .text(d => d)
+        .merge(labels)
+        .transition().duration(800)
+        .attr("x", (d, i) => 85 + i * 70 + 30);  // center of rect at final slot
+
+ 
+    // --- EMPTY QUEUE MESSAGE ---
+    if (data.length === 0) {
+      // Remove any existing markers
+      svg.selectAll(".frontMarker").remove();
+      svg.selectAll(".rearMarker").remove();
+
+      svg.select(".empty-placeholder")
+          .style("opacity", 1);  
+    } else {
+      // Remove the empty message when queue has items
+      svg.selectAll(".emptyMsg").remove();
+
+      // --- FRONT MARKER ---
+      const rectWidth = 60;
+      const rectHeight = 30;
+      const frontIndex = 0;
+      const frontX = 80 + frontIndex * 70;
+      const frontY = 165;
+
+      let frontMarker = svg.selectAll(".frontMarker").data([data[0]]);
+      const frontEnter = frontMarker.enter().append("g").attr("class", "frontMarker");
+
+      frontEnter.append("text")
+        .attr("text-anchor", "middle")
+        .attr("fill", "red")
+        .attr("font-family", "Courier New")
+        .attr("font-size", "14px")
+        .attr("font-weight", "bold")
+        .text("Front");
+
+      frontEnter.append("line")
+        .attr("stroke", "red")
+        .attr("stroke-width", 2)
+        .attr("marker-end", "url(#arrowheadFront)");
+
+      frontMarker = frontEnter.merge(frontMarker);
+
+      frontMarker.select("text")
+        .transition().duration(800)
+        .attr("x", frontX + rectWidth/2)
+        .attr("y", frontY - 15);
+
+      frontMarker.select("line")
+        .transition().duration(800)
+        .attr("x1", frontX + rectWidth/2)
+        .attr("y1", frontY - 15)
+        .attr("x2", frontX + rectWidth/2)
+        .attr("y2", frontY + rectHeight/2);
+
+      // --- REAR MARKER ---
+      const rearIndex = data.length - 1;
+      const rearX = 80 + rearIndex * 70;
+      const rearY = 205;
+
+      let rearMarker = svg.selectAll(".rearMarker").data([data[rearIndex]]);
+      const rearEnter = rearMarker.enter().append("g").attr("class", "rearMarker    ");
+
+      rearEnter.append("text")
+        .attr("text-anchor", "middle")
+        .attr("fill", "green")
+        .attr("font-family", "Courier New")
+        .attr("font-size", "14px")
+        .attr("font-weight", "bold")
+        .text("Rear");
+
+      rearEnter.append("line")
+        .attr("stroke", "green")
+        .attr("stroke-width", 2)
+        .attr("marker-end", "url(#arrowheadRear)");
+
+      rearMarker = rearEnter.merge(rearMarker);
+
+      rearMarker.select("text")
+        .transition().duration(800)
+        .attr("x", rearX + rectWidth/2)
+        .attr("y", rearY + rectHeight + 30);
+
+      rearMarker.select("line")
+        .transition().duration(800)
+        .attr("x1", rearX + rectWidth/2)
+        .attr("y1", rearY + rectHeight + 15)
+        .attr("x2", rearX + rectWidth/2)
+        .attr("y2", rearY + rectHeight/2);
+    }
+
+   // --- Define arrowheads once ---
+   svg.select("defs").remove();
+   const defs = svg.append("defs");
+
+   defs.append("marker")
+     .attr("id", "arrowheadFront")
+     .attr("viewBox", "0 0 10 10")
+     .attr("refX", 5)
+     .attr("refY", 5)
+     .attr("markerWidth", 6)
+     .attr("markerHeight", 6)
+     .attr("orient", "auto")
+     .append("path")
+     .attr("d", "M 0 0 L 10 5 L 0 10 Z")
+     .attr("fill", "red");
+
+   defs.append("marker")
+     .attr("id", "arrowheadRear")
+     .attr("viewBox", "0 0 10 10")
+     .attr("refX", 5)
+     .attr("refY", 5)
+     .attr("markerWidth", 6)
+     .attr("markerHeight", 6)
+     .attr("orient", "auto")
+     .append("path")
+     .attr("d", "M 0 0 L 10 5 L 0 10 Z")
+     .attr("fill", "green");
+  }
+
+</script>
+</body>
+</html>
