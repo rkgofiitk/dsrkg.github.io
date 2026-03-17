@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #f0f0f0;
+      flex-direction: column;
+    }
+
+    #output-frame {
+      border: 3px solid #333;
+      border-radius: 8px;
+      background: #fff;
+      padding: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      width: 80vw;
+      height: 60vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    #visual-area {
+      width: 100%;
+      height: 100%;
+    }
+
+    #controls {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    #controls button {
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: bold;
+      border: none;
+      border-radius: 5px;
+      background-color: #007BFF;
+      color: white;
+      cursor: pointer;
+      margin: 5px;
+    }
+
+    #controls button:hover {
+      background-color: #0056b3;
+    }
+
+    #input-area input {
+      padding: 8px;
+      font-size: 14px;
+      width: 200px;
+      margin: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      height: 36px;
+      box-sizing: border-box;
+    }
+    .line {
+      width: 2px;
+      height: 100px;
+      background: blue;
+      display: inline-block;
+      margin: 5px;
+    }
+
+    .link-text {
+      font-size: 12px;
+      font-family: "Courier New", monospace;
+      fill:  steelblue;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+    .link-text:hover {
+      fill: darkblue;
+    }
+
+
+
+  </style>
+</head>
+<body>
+  <h2>Animation of Stack Operations</h2>
+  <!-- Framed container -->
+  <div id="output-frame">
+    <svg id="visual-area" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid meet">
+      <!-- Box with open top, centered in the viewing area -->
+      <path d="M350 80 L350 350 L450 350 L450 80"
+            stroke="black"
+            fill="none"
+            stroke-width="2"/>
+     
+    </svg>
+  </div>
+
+  <!-- Controls -->
+  <div id="controls">
+    <button onclick="pushData()">Push</button>
+    <button onclick="popData()">Pop</button>
+  </div>
+
+  <!-- Input area -->
+  <div id="input-area">
+    <input type="text" id="inputValue" placeholder="Enter value">
+  </div>
+
+  <!-- Load libraries -->
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script>
+
+
+   // Global SVG reference
+   const svg = d3.select("#visual-area"); 
+
+   // Create info box for resources
+   createResourceBox(svg, [
+      { label: "D3.js Homepage", url: "https://d3js.org" },
+      { label: "SVG Basics", url: "https://developer.mozilla.org/docs/Web/SVG" },
+      { label: "Transitions Guide", url: "https://observablehq.com/@d3/learn-d3-transitions" }
+    ]);
+
+    // Resource box definition
+    function createResourceBox(svg, links) {
+      // Remove any existing resource box
+      svg.selectAll("g.info-box").remove();
+
+      // Create group for the box
+      let infoBox = svg.append("g")
+        .attr("class", "info-box")
+        .attr("transform", "translate(580,25)");
+
+      // Background rectangle
+      infoBox.append("rect")
+        .attr("width", 225)
+        .attr("height", 125)
+        .attr("fill", "#f9f9f9")
+        .attr("stroke", "black")
+        .attr("rx", 10)
+        .attr("ry", 10)
+        .attr("pointer-events", "none"); // ✅ don’t block clicks
+
+      // Title
+      infoBox.append("text")
+        .attr("x", 100)
+        .attr("y", 25)
+        .attr("text-anchor", "middle")
+        .attr("font-size", "14px")
+        .attr("font-weight", "bold")
+        .text("Resources");
+
+      // Add each link
+      links.forEach((link, i) => {
+        let linkGroup = infoBox.append("a")
+          .attr("href", link.url)       // ✅ modern browsers use href
+          .attr("target", "_blank");    // open in new tab
+
+        linkGroup.append("text")
+          .attr("x", 10)
+          .attr("y", 50 + i * 20)       // stack links vertically
+          .attr("class", "link-text")
+          .text(link.label);
+      });
+    }
+
+   // Create status message element once, outside <g>
+    svg.append("text")
+       .attr("class", "status-message")
+       .attr("x", 395)
+       .attr("y", 380)
+       .attr("text-anchor", "middle")
+       .attr("fill", "green")
+       .attr("font-family", "Courier New")
+       .attr("font-size", "18px")
+       .attr("font-weight", "bold")
+       .style("opacity", 0);
+
+    svg.append("text")
+        .attr("class", "empty-placeholder")
+        .attr("x", 250)
+        .attr("y", 200)
+        .attr("text-anchor", "middle")
+        .attr("fill", "gray")
+        .attr("font-size", "20px")
+        .attr("font-family", "Courier New")
+        .text("Empty Stack");
+
+    function showStatus(message, color="green") {
+        const status = svg.select("text.status-message");
+        if (status.empty()) {
+          console.warn("Status message element not found");
+          return;
+        }
+
+        status.interrupt()
+          .text(message)
+          .attr("fill", color)
+          .style("opacity", 1)
+          .transition().delay(1500).duration(2500)
+          .style("opacity", 0);
+    }
+
+    const numberOfLines = 8;   // how many vertical lines you want
+    const spacing = 35;        // distance between lines
+    const startY = 106;        // first line’s x position
+    const xLeft = 350;         // top y coordinate
+    const xRight = 450;        // bottom y coordinate
+
+
+   function drawStackFrame() {
+     for (let i = 0; i < numberOfLines; i++) {
+       const y = startY + i * spacing;
+       svg.append("line")
+         .attr("x1", xLeft)
+         .attr("y1", y)
+         .attr("x2", xRight)
+         .attr("y2", y)
+         .attr("stroke", "gray")
+         .attr("stroke-width", 2);
+     }
+     showStatus("Created a new empty stack", "red")
+     svg.select(".empty-placeholder")
+         .style("opacity", 1);   // Show when stack has no items
+   }
+
+   drawStackFrame() 
+
+   updateVisualization([], poppedItem = null, pushedItem = null)
+
+   function pushData() {
+
+    const value = document.getElementById("inputValue").value.trim();
+    if (!value) return;
+
+    fetch("/push_data", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ value: value })
+    })
+    .then(response => response.json())
+    .then(result => {
+      // For push, only update stack (no popped item)
+      updateVisualization(result.stack, null, result.pushed);
+ 
+      if (result.pushed === "Stack is full - push failed") {
+           msg = `Stack is full - push ${value} failed`;
+           showStatus(msg, color="red");
+          // alert("Push not possible: stack is full");
+      }
+     //  clear the field after push attempt
+     (inputValue).value = "";
+      })
+     .catch(err => console.error("Error:", err));
+   }
+
+
+   function popData() {
+     fetch("/pop_data", { method: "POST" })
+       .then(response => response.json())
+       .then(result => {
+         // Always update visualization
+         updateVisualization(result.stack, result.popped, null);
+
+         // Handle empty stack case
+         if (result.popped === "Stack is empty - pop failed") {
+           msg = `Stack empty - no item to pop`;
+           showStatus(msg, color="red");
+         }
+       })
+       .catch(err => console.error("Error:", err));
+   }
+
+
+
+   function updateVisualization(data, poppedItem=null, pushedItem=null) {
+     // --- NODES ---
+     const nodes = svg.selectAll("rect.node").data(data, d => d);
+
+     nodes.exit()
+       .transition().duration(500)
+       .attr("y", -50)
+       .remove();
+
+     nodes.enter()
+       .append("rect")
+       .attr("class", "node")
+       .attr("width", 60)
+       .attr("height", 30)
+       .attr("x", 370)
+       .attr("y", -50)
+       .attr("fill", "steelblue")
+       .merge(nodes)
+       .transition().duration(500)
+       .attr("y", (d, i) => 320 - i * 35);
+
+     // --- LABELS ---
+     const labels = svg.selectAll("text.label").data(data, d => d);
+
+     labels.exit()
+       .transition().duration(500)
+       .attr("y", -20)
+       .remove();
+
+     labels.enter()
+       .append("text")
+       .attr("class", "label")
+       .attr("x", 400)
+       .attr("y", -20)
+       .attr("text-anchor", "middle")
+       .attr("fill", "white")
+       .attr("font-family", "Courier New")
+       .attr("font-size", "16px")
+       .attr("font-weight", "bold")
+       .merge(labels)
+       .transition().duration(500)
+       .attr("y", (d, i) => 320 - i * 35 + 20)
+       .text(d => d);
+
+     // --- STATUS MESSAGES ---
+     if (poppedItem) {
+       if (poppedItem === "Stack is empty - pop failed") {
+         showStatus("Pop not possible: stack is empty", "#d9534f");
+       } else {
+         showStatus(`Popped item: ${poppedItem}`, "#d9534f");
+         if (data.length === 0) {
+             // Show the Empty Stack message when no items exists
+             svg.select(".empty-placeholder")
+                .style("opacity", 1);   
+         }
+       }
+     }
+
+     if (pushedItem) {
+       if (pushedItem === "Stack is full - push failed") {
+         showStatus("Push not possible: stack is full", "#d9534f");
+       } else {
+         // Hide Empty Stack message when stack has items
+         svg.select(".empty-placeholder")
+            .style("opacity", 0);   
+         // Status message for the current push 
+         showStatus(`Pushed item: ${pushedItem}`, "green");
+       }
+     }
+
+   }
+  </script>
+</body>
+</html>
