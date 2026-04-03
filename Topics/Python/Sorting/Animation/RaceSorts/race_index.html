@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sorting Race</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+    .race-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      padding: 10px;
+      border: 2px solid #ccc;
+      border-radius: 6px;
+      background-color: #ffffff;
+      width: 950px;   /* matches 2 × 450px charts + gap */
+      margin: 0 auto;            /* centers horizontally */
+      justify-items: center;     
+    }
+    .chart-container {
+      border: 0px solid #ccc;
+      display: flex;
+      height: 300px;
+      text-align: center;
+      padding: 10px;          /* reduced inner padding */
+    }
+    .initial-row {
+      grid-column: 1 / span 2;      /* stretch across both columns */
+      text-align: center;
+      font-family: sans-serif;
+      font-size: 14px;
+      font-weight: bold;
+      color: #333;
+
+      max-width: 100%;              /* keep inside race-grid width */
+      overflow-wrap: break-word;    /* allow wrapping at word boundaries */
+      word-break: break-all;        /* force break if needed */
+      white-space: normal;          /* allow wrapping instead of one long line */
+    }
+     h3 {
+      margin-bottom: 10px;
+    }
+    svg {
+      width: 450px;
+      height: 250px;
+      background: #f9f9f9;
+    }
+    #controls {
+       display: flex;
+       flex-wrap: wrap;
+       justify-content: center;
+    }
+
+    #controls button {
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: bold;
+      border: none;
+      border-radius: 5px;
+      background-color: #007BFF;
+      color: white;
+      cursor: pointer;
+      margin: 5px;
+    }
+
+    #controls button:hover {
+      background-color: #0056b3;
+    }
+
+  </style>
+</head>
+<body>
+  <h1>Sorting Race: Bubble vs Merge vs Quick vs Bucket</h1>
+  <div id="controls">
+  <button onclick="runRace()">Start Race</button>
+  <button id="resetRace">Reset Bars</button>
+</div>
+
+
+
+<div class="race-grid">
+  <!-- Initial values in a row spanning two cols inside the grid -->
+  <div id="initial-labels" class="initial-row"></div>
+
+  <div class="chart-container">
+    <svg id="bubbleChart" width="450" height="300">
+      <text x="200" y="20" text-anchor="middle" font-size="16" font-family="sans-serif" font-weight="bold">Bubble Sort</text>
+    </svg>
+  </div>
+  <div class="chart-container">
+    <svg id="mergeChart" width="450" height="300">
+      <text x="200" y="20" text-anchor="middle" font-size="16" font-family="sans-serif" font-weight="bold">Merge Sort</text>
+    </svg>
+  </div>
+  <div class="chart-container">
+    <svg id="quickChart" width="450" height="300">
+      <text x="200" y="20" text-anchor="middle" font-size="16" font-family="sans-serif" font-weight="bold">Quick Sort</text>
+    </svg>
+  </div>
+  <div class="chart-container">
+    <svg id="bucketChart" width="450" height="300">
+      <text x="200" y="20" text-anchor="middle" font-size="16" font-family="sans-serif" font-weight="bold">Bucket Sort</text>
+    </svg>
+  </div>
+</div>
+	    <!-- Load libraries -->
+<script src="https://d3js.org/d3.v7.min.js"></script>
+
+
+<script>
+
+const svg = d3.select("svg");
+
+// Define constants for each chart
+
+const bubbleChart = d3.select("#bubbleChart");
+const mergeChart  = d3.select("#mergeChart");
+const quickChart  = d3.select("#quickChart");
+const bucketChart = d3.select("#bucketChart");
+
+const chartHeight = +svg.attr("height");
+
+function showInitialLabels(initialArray) {
+  d3.select("#initial-labels")
+    .html("") // clear previous
+    .append("p")
+    .attr("class", "initialLabel")
+    .style("text-align", "center")
+    .style("font-family", "Arial, sans-serif")
+    .style("font-size", "16px")
+    .style("font-weight", "bold")
+    .style("color", "darkblue")
+    .text("Initial values: " + initialArray.join(", "));
+}
+
+function renderBars(data, chart) {
+  const chartWidth = +chart.attr("width");
+  const chartHeight = +chart.attr("height");
+
+  const reservedTop = 70;
+  const gap = 2;
+  const maxBarHeight = chartHeight - reservedTop;
+  const maxValue = d3.max(data) || 1;
+
+  const barWidth = (chartWidth - gap * (data.length - 1)) / data.length;
+  const totalBarsWidth = data.length * barWidth + (data.length - 1) * gap;
+  const offsetX = (chartWidth - totalBarsWidth) / 2;
+
+  const yScale = d3.scaleLinear()
+      .domain([0, maxValue])
+      .range([0, maxBarHeight]);
+
+  chart.selectAll(".bar")
+    .data(data, (d, i) => i) // Bind the items by index
+    .enter()
+    .append("rect")
+    .attr("class", "bar")
+    .attr("x", (d, i) => offsetX + i * (barWidth + gap))
+    .attr("width", barWidth)
+    .attr("y", d => reservedTop + maxBarHeight - Math.max(1, yScale(d)))
+    .attr("height", d => Math.max(1, yScale(d))) // Minimum bar height
+    .attr("fill", "steelblue");
+
+  return { chartWidth, chartHeight, gap, reservedTop };
+}
+
+
+
+function updateBars(snapshot, chart, chartWidth, chartHeight, 
+                    gap, reservedTop, isFinal=False) {
+  const values = snapshot.array;
+  if (!values || values.length === 0) return;
+
+  const highlights = snapshot.highlights || [];
+  const pivot = snapshot.pivot;
+
+  const maxBarHeight = chartHeight - reservedTop;
+  const maxValue = d3.max(values) || 1;
+
+  const yScale = d3.scaleLinear()
+      .domain([0, maxValue])
+      .range([0, maxBarHeight]);
+
+  const barWidth = (chartWidth - gap * (values.length - 1)) / values.length;
+  const totalBarsWidth = values.length * barWidth + (values.length - 1) * gap;
+  const offsetX = (chartWidth - totalBarsWidth) / 2;
+
+  const bars = chart.selectAll(".bar")
+    .data(values, (d, i) => i); // Stable binding of data by index
+
+  bars.enter()
+    .append("rect")
+    .attr("class", "bar")
+    .merge(bars)
+    .transition()
+    .duration(200)
+    .attr("x", (d, i) => offsetX + i * (barWidth + gap))
+    .attr("width", barWidth)
+    .attr("y", d => reservedTop + maxBarHeight - Math.max(1, yScale(d)))
+    .attr("height", d => Math.max(1, yScale(d))) // Minimum bar height
+    .attr("fill", (d, i) => {
+      if (isFinal) return "green"; // Color the sorted bars green
+      if (pivot === i) return "red"; // Pivot for quick sort 
+      if (highlights.includes(i)) return "orange"; // Elements swapped
+      return "steelblue";
+    });
+
+  bars.exit().remove();
+
+}
+
+
+function animateSort(steps, chart, chartWidth, chartHeight, gap, reservedTop) {
+  steps.forEach((snapshot, index) => {
+    setTimeout(() => {
+      const isFinal = index === steps.length - 1; // last step
+      updateBars(snapshot, chart, chartWidth, chartHeight, gap, reservedTop, isFinal);
+    }, index * 300);
+  });
+}
+
+
+
+function clearCharts() {
+
+  // Clear each chart and its headin explicitly
+  ["bubbleChart","mergeChart","quickChart","bucketChart"].forEach(id => {
+    const svg = d3.select("#" + id);
+    svg.selectAll("*").remove();
+
+    // Re-add the heading text
+    let title = "";
+    if (id === "bubbleChart") title = "Bubble Sort";
+    if (id === "mergeChart") title = "Merge Sort";
+    if (id === "quickChart") title = "Quick Sort";
+    if (id === "bucketChart") title = "Bucket Sort";
+
+    svg.append("text")
+      .attr("x", 200)
+      .attr("y", 20)
+      .attr("text-anchor", "middle")
+      .attr("font-size", 16)
+      .attr("font-family", "sans-serif")
+      .attr("font-weight", "bold")
+      .text(title);
+  });
+
+  // Clear the initial labels
+  d3.select("#initial-labels").html("");
+}       
+
+function runRace() {
+  fetch("/race?size=30")
+    .then(res => res.json())
+    .then(result => {
+      showInitialLabels(result.array);
+
+      // Bubble
+      const bubble = renderBars(result.bubble.steps[0].array, bubbleChart);
+      animateSort(
+              result.bubble.steps,
+              bubbleChart, 
+              bubble.chartWidth, 
+              bubble.chartHeight, 
+              bubble.gap, 
+              bubble.reservedTop);
+
+      d3.select("#bubbleChart")
+          .append("text")
+          .attr("x", 200)
+          .attr("y", 50)   // move up so it’s visible
+          .attr("text-anchor", "middle")
+          .attr("font-size", 14)
+          .attr("fill", "darkred")
+          .text(() => {
+            const t = result.bubble.time.toFixed(6);
+            const raw = (result.bubble.raw_time_ms || 0).toFixed(0);
+            return `Time: ${t}s (raw: ${raw} ms)`;
+          });
+
+
+
+
+      // Merge
+      const merge = renderBars(result.merge.steps[0].array, mergeChart);
+      animateSort(
+              result.merge.steps, 
+              mergeChart, 
+              merge.chartWidth, 
+              merge.chartHeight, 
+              merge.gap, 
+              merge.reservedTop);
+
+      d3.select("#mergeChart")
+        .append("text")
+        .attr("x", 200)
+        .attr("y", 50)
+        .attr("text-anchor", "middle")
+        .attr("font-size", 14)
+        .attr("fill", "darkred")
+        .text(() => {
+          const t = result.merge.time.toFixed(6);
+          const raw = (result.merge.raw_time_ms || 0).toFixed(0);
+          return `Time: ${t}s (raw: ${raw} ms)`;
+        });
+
+
+
+      // Quick
+      const quick = renderBars(result.quick.steps[0].array, quickChart);
+      animateSort(
+              result.quick.steps, 
+              quickChart, 
+              quick.chartWidth, 
+              quick.chartHeight, 
+              quick.gap, 
+              quick.reservedTop);
+
+      d3.select("#quickChart")
+        .append("text")
+        .attr("x", 200)
+        .attr("y", 50)
+        .attr("text-anchor", "middle")
+        .attr("font-size", 14)
+        .attr("fill", "darkred")
+        .text(() => {
+          const t = result.quick.time.toFixed(6);
+          const raw = (result.quick.raw_time_ms || 0).toFixed(0);
+          return `Time: ${t}s (raw: ${raw} ms)`;
+        });
+
+
+      // Bucket
+      const bucket = renderBars(result.bucket.steps[0].array, bucketChart);
+      animateSort(
+              result.bucket.steps, 
+              bucketChart, 
+              bucket.chartWidth, 
+              bucket.chartHeight, 
+              bucket.gap, bucket.
+              reservedTop);
+
+      d3.select("#bucketChart")
+        .append("text")
+        .attr("x", 200)
+        .attr("y", 50)
+        .attr("text-anchor", "middle")
+        .attr("font-size", 14)
+        .attr("fill", "darkred")
+        .text(() => {
+          const t = result.bucket.time.toFixed(6);
+          const raw = (result.bucket.raw_time_ms || 0).toFixed(0);
+          return `Time: ${t}s (raw: ${raw} ms)`;
+        });
+      })
+}
+
+    // Add event listeners for race sort and reset
+
+window.onload = () => {
+  const raceBtn = document.getElementById("runRace");
+  if (raceBtn) {
+     raceBtn.addEventListener("click", () => runRace());
+  }
+
+  const resetBtn = document.getElementById("resetRace");
+  if (resetBtn) {
+     resetBtn.addEventListener("click", () => {
+     console.log("Reset button clicked");  // Logs clicking
+     clearCharts();     // Clears the chart area
+
+     // Uncomment to runRace directly by resetting
+     // runRace();
+     });
+  }
+};
+
+      </script>
+    </body>
+</html>
