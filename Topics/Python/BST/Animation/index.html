@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #f0f0f0;
+      flex-direction: column;
+    }
+
+    #output-frame {
+      border: 3px solid #333;
+      border-radius: 8px;
+      background: #fff;
+      padding: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      width: 80vw;
+      height: 60vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    #visual-area {
+      width: 100%;
+      height: 100%;
+    }
+
+    #controls {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    #controls button {
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: bold;
+      border: none;
+      border-radius: 5px;
+      background-color: #007BFF;
+      color: white;
+      cursor: pointer;
+      margin: 5px;
+    }
+
+    #controls button:hover {
+      background-color: #0056b3;
+    }
+
+    #input-area input {
+      padding: 8px;
+      font-size: 14px;
+      width: 200px;
+      margin: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      height: 36px;          /* force consistent height */
+      box-sizing: border-box;
+    }
+
+   /* Different background for insertAfter */
+    #insertAfter {
+      background-color: #e6f7ff; /* light blue */
+    }
+    #nodeValue {
+      padding: 8px;
+      font-size: 14px;
+      width: 200px;
+    } 
+    .line {
+      width: 2px;
+      height: 100px;
+      background: blue;
+      display: inline-block;
+      margin: 5px;
+    }
+
+    .link-text {
+      font-size: 12px;
+      font-family: "Courier New", monospace;
+      fill:  steelblue;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+    .link-text:hover {
+      fill: darkblue;
+    }
+
+
+
+  </style>
+	</head>
+	<body>
+
+        <h2>Animation of Binary Search Tree Operations</h2>
+		<!-- Framed container -->
+		<div id="output-frame">
+			<svg id="visual-area" viewBox="-100 25 800 450" preserveAspectRatio="xMidYMid meet"
+				xmlns="http://www.w3.org/2000/svg">
+			</svg>
+		</div>
+		<!-- Controls -->
+		<div id="controls">
+            <button onclick="insertNode()">Insert</button>
+            <button onclick="deleteNode()">Delete</button>
+            <button onclick="getTraversal('preorder')">Preorder</button>
+            <button onclick="getTraversal('inorder')">Inorder</button>
+            <button onclick="getTraversal('postorder')">Postrder</button>
+            <button id="resetBtn">Reset Tree</button>
+
+
+	    </div>
+        <div id="input-area">
+		    <!-- Inline input area -->
+            <input type="number" id="inputValue"  placeholder="Enter value">
+        </div>
+	    <!-- Load libraries -->
+	   <script src="https://d3js.org/d3.v7.min.js"></script>
+<script>
+
+   // Global SVG reference
+   const svg = d3.select("#visual-area"); 
+   const r = 15; // node radius
+
+   // Create status message element once, outside <g>
+   svg.append("text")
+      .attr("class", "status-message")
+      .attr("x", 300)
+      .attr("y", 415)
+      .attr("text-anchor", "middle")
+      .attr("fill", "green")
+      .attr("font-family", "Courier New")
+      .attr("font-size", "18px")
+      .attr("font-weight", "bold")
+      .style("opacity", 0);
+
+    // Define arrowhead marker ONCE (outside update)
+    svg.append("defs").append("marker")
+      .attr("id", "arrow")
+      .attr("viewBox", "0 -5 10 10")
+      .attr("refX", 10)   // push arrow tip outside circle
+      .attr("refY", 0)
+      .attr("markerWidth", 6)
+      .attr("markerHeight", 6)
+      .attr("orient", "auto")
+      .append("path")
+      .attr("d", "M0,-5L10,0L0,5")
+      .attr("fill", "black")
+      .attr("stroke", "black");
+
+    // Create the placeholder once on page setup
+    const emptyPlaceholder = svg.append("text")
+      .attr("class", "empty-placeholder")
+      .attr("x", 300)
+      .attr("y", 200)
+      .attr("text-anchor", "middle")
+      .attr("fill", "gray")
+      .attr("font-size", "20px")
+      .attr("font-family", "Courier New")
+      .style("opacity", 0)   // start hidden
+      .text("Empty Tree");
+
+/*   document.addEventListener("DOMContentLoaded", () => {
+      const resetBtn = document.getElementById("resetBtn");  
+      if (resetBtn) {
+          resetBtn.addEventListener("click", () => {
+            loadOrResetTree("/reset", "POST");
+          });
+      }
+   }); */
+
+ 
+   createResourceBox(svg, [
+      { label: "D3.js Homepage", url: "https://d3js.org" },
+      { label: "SVG Basics", url: "https://developer.mozilla.org/docs/Web/SVG" },
+      { label: "Transitions Guide", url: "https://observablehq.com/@d3/learn-d3-t    ransitions" }
+   ]);
+
+   function createResourceBox(svg, links) {
+     // Remove any existing resource box
+     svg.selectAll("g.info-box").remove();
+
+     // Create group for the box
+     let infoBox = svg.append("g")
+       .attr("class", "info-box")
+       .attr("transform", "translate(550,30)");
+
+     // Background rectangle
+     infoBox.append("rect")
+       .attr("width", 225)
+       .attr("height", 125)
+       .attr("fill", "#f9f9f9")
+       .attr("stroke", "black")
+       .attr("rx", 10)
+       .attr("ry", 10)
+       .attr("pointer-events", "none"); // ✅ don’t block clicks
+
+     // Title
+     infoBox.append("text")
+       .attr("x", 125)
+       .attr("y", 25)
+       .attr("text-anchor", "middle")
+       .attr("font-size", "14px")
+       .attr("font-weight", "bold")
+       .text("Resources");
+
+     // Add each link
+     links.forEach((link, i) => {
+       let linkGroup = infoBox.append("a")
+         .attr("href", link.url)       // ✅ modern browsers use href
+         .attr("target", "_blank");    // open in new tab
+
+     linkGroup.append("text")
+         .attr("x", 10)
+         .attr("y", 50 + i * 20)       // stack links vertically
+         .attr("class", "link-text")
+         .text(link.label);
+     });
+   }
+
+
+    function showEmptyTree() {
+        svg.select(".empty-placeholder").style("opacity", 1);
+    }
+
+    function hideEmptyTree() {
+        svg.select(".empty-placeholder").style("opacity", 0);
+    }
+
+
+    function showStatus(message, color="green") {
+        const status = svg.select("text.status-message");
+        if (status.empty()) {
+          console.warn("Status message element not found");
+          return;
+        }
+
+        status.interrupt()
+          .text(message)
+          .attr("fill", color)
+          .style("opacity", 1)
+          .transition().delay(1500).duration(2500)
+          .style("opacity", 0);
+      }
+
+    function edgePoint(source, target, r) {
+      let dx = target.x - source.x;
+      let dy = target.y - source.y;
+      let dist = Math.sqrt(dx*dx + dy*dy);
+      return {
+        x: source.x + (dx/dist) * r,
+        y: source.y + (dy/dist) * r
+      };
+    } 
+
+     // Traversal fetch + render
+    function getTraversal(order) {
+      let tt = order
+      let t_type = tt.charAt(0).toUpperCase() + tt.slice(1);  
+
+      fetch(`/traverse/${order}`)
+        .then(res => res.json())
+        .then(labels => {
+          console.log("Traversal data:", labels); // should be an array
+          if (!Array.isArray(labels)) {
+            showStatus("Traversal data is not an array", "red");
+            return;
+          }
+          if (labels.length === 0) {
+            // Empty list case
+            showStatus("Tree is empty - no traversal list to display", "blue");
+
+           // Clear any existing traversal group
+           let traversalGroup = svg.select("g.traversal");
+           if (!traversalGroup.empty()) {
+             traversalGroup.selectAll("*").remove();
+           }
+
+            return;
+          }
+          renderTraversal(labels, order);
+          showStatus(`${t_type} traversal list displayed below`, "blue");
+        })
+        .catch(err => {
+          console.error("Traversal fetch error:", err);
+          showStatus("Traversal fetch failed", "red");
+        });
+    }
+
+    function renderTraversal(labels, order="Traversal") {
+      let traversalGroup = svg.select("g.traversal");
+      if (traversalGroup.empty()) {
+        traversalGroup = svg.append("g")
+          .attr("class", "traversal")
+          .attr("transform", "translate(50,450)");
+     }
+
+     // Prefix text
+     let prefix = traversalGroup.selectAll("text.traversal-prefix")
+       .data([order]);
+
+     prefix.enter().append("text")
+       .attr("class", "traversal-prefix")
+       .attr("x", -115)
+       .attr("y", 5)
+       .attr("fill", "black")
+       .attr("font-size", "16px")
+       .attr("font-weight", "bold")
+       .text(d => d.charAt(0).toUpperCase() + d.slice(1) + " list:")
+       .merge(prefix)
+       .text(d => d.charAt(0).toUpperCase() + d.slice(1) + " list:");
+
+     prefix.exit().remove();
+
+     // Render Traversal nodes
+     let items = traversalGroup.selectAll("g.traversal-node")
+       .data(labels, (d,i) => i);  // use index as key
+
+     let enter = items.enter().append("g")
+       .attr("class", "traversal-node")
+       .attr("transform", (d, i) => `translate(${i*50},0)`);
+
+     enter.append("circle")
+       .attr("r", 15)
+       .attr("fill", "orange");
+
+     enter.append("text")
+       .attr("text-anchor", "middle")
+       .attr("dy", 5)
+       .attr("fill", "black")
+       .text(d => d);
+
+     items.transition().duration(500)
+       .attr("transform", (d, i) => `translate(${i*50},0)`);
+
+     items.select("text").text(d => d);
+
+     items.exit().remove();
+   }
+
+   function render(treeData) {
+
+      // Select or create dedicated tree group
+      let g = svg.select("g.tree");
+      if (g.empty()) {
+        g = svg.append("g")
+          .attr("class", "tree")
+          .attr("transform", "translate(0,50)");
+      }
+
+      // Build hierarchy + layout
+      let root = d3.hierarchy(treeData);
+      let treeLayout = d3.tree().size([600, 300]);
+      treeLayout(root);
+
+    let nodes = root.descendants();
+    let links = root.links();
+
+    // LINKS
+    let link = g.selectAll("line")
+      .data(links, d => d.target.data.name);
+
+    link.enter().append("line")
+        .attr("stroke", "black")
+        .attr("marker-end", "url(#arrow)")
+      .merge(link)
+        .transition().duration(750)
+        .attr("x1", d => edgePoint(d.source, d.target, r).x)
+        .attr("y1", d => edgePoint(d.source, d.target, r).y)
+        .attr("x2", d => {
+          let dx = d.target.x - d.source.x;
+          let dy = d.target.y - d.source.y;
+          let dist = Math.sqrt(dx*dx + dy*dy);
+          return d.target.x - (dx/dist) * r;
+        })
+        .attr("y2", d => {
+          let dx = d.target.x - d.source.x;
+          let dy = d.target.y - d.source.y;
+          let dist = Math.sqrt(dx*dx + dy*dy);
+          return d.target.y - (dy/dist) * r;
+        });
+
+    link.exit().transition().duration(500).style("opacity", 0).remove();
+
+    // NODES
+    let node = g.selectAll("circle")
+      .data(nodes, d => d.data.id);
+
+    node.enter().append("circle")
+        .attr("cx", d => d.parent ? d.parent.x : d.x)
+        .attr("cy", d => d.parent ? d.parent.y : d.y)
+        .attr("r", 0)
+        .attr("fill", "steelblue")
+      .merge(node)
+        .transition().duration(750)
+        .attr("cx", d => d.x)
+        .attr("cy", d => d.y)
+        .attr("r", r);
+
+    node.exit().transition().duration(500).attr("r", 0).remove();
+
+    // LABELS
+    let label = g.selectAll("text.node-label")
+      .data(nodes, d => d.data.id);
+
+    label.enter().append("text")
+        .attr("class", "node-label")
+        .attr("text-anchor", "middle")
+        .attr("fill", "white")
+        .style("opacity", 0)
+      .merge(label)
+        .attr("x", d => d.x)
+        .attr("y", d => d.y + 5)
+        .text(d => d.data.name)
+        .style("opacity", 1);
+
+    label.exit().remove();
+  }
+
+   function insertNode() {
+       // svg.selectAll("text.empty-placeholder").remove();
+       hideEmptyTree();
+
+    let input = document.getElementById("inputValue");
+    let val = input.value;
+
+    fetch("/insert", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({key: val})
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data === null) {
+        msg = `Limit reached - ${val} not inserted`
+        showStatus(msg, "red");
+        input.value = "";   // Clear field, placeholder shows again
+      } else {
+        render(data);
+        msg = `Node ${val} inserted successfully - click to update traversal list`
+        showStatus(msg, "green");
+        input.value = "";   // clear field, placeholder shows again
+      }
+    });
+  }
+   function clearTree() {
+      // Select the dedicated tree group
+       let gTree = svg.select("g.tree");
+       gTree.selectAll("*").remove();
+
+       // Remove all children, display empty tree message 
+       showEmptyTree();  
+   }
+
+  function deleteNode() {
+    let input = document.getElementById("inputValue")
+    let val = input.value;
+    if (!val) {
+      showStatus("Please enter a value to delete", "red");
+      return;
+    }
+
+    fetch("/delete", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({key: val})
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data === null) {
+        msg = `Deletion unsuccessful - node ${val} not found`
+        showStatus(msg, "red");
+        input.value = "";   // Clear field, placeholder shows again
+      } else if (data.empty) {
+        clearTree();
+        showStatus("Tree is now empty", "blue");
+      } else {
+        render(data);
+        msg = `Node ${val} deleted successfully - click to update traversal list`
+        showStatus(msg, "green");
+        input.value = "";   // Clear field, placeholder shows again
+      }
+    });
+  }
+
+
+function loadOrResetTree(endpoint = "/tree", method = "GET") {
+  fetch(endpoint, {
+    method: method,
+    headers: { "Content-Type": "application/json" }
+  })
+    .then(res => res.json())
+    .then(data => {
+      // Clear the visualization group first
+      let gTree = svg.select("g.tree");
+      gTree.selectAll("*").remove();
+
+      // Handle empty tree case
+      if (!data || !data.tree || data.empty || data.tree === null) {
+        showStatus(endpoint === "/reset" ? "Tree has been reset to empty" : "Tree       is empty", "blue");
+        showEmptyTree(); 
+        return;
+      }
+      //render(data);
+     // svg.select(".empty-placeholder").style("opacity", 1);
+     })
+    .catch(err => {
+      console.error("Tree fetch/reset error:", err);
+      showStatus("Tree operation failed", "red");
+    });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  loadOrResetTree("/tree", "GET");
+
+  const resetBtn = document.getElementById("resetBtn");
+  if (resetBtn) {
+    resetBtn.addEventListener("click", () => {
+      loadOrResetTree("/reset", "POST");
+    });
+  }
+});
+
+
+</script>
+</body>
+</html>
