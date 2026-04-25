@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>DFS Graph Demo</title>
+		<style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #f0f0f0;
+      flex-direction: column;
+    }
+
+    #output-frame {
+      border: 3px solid #333;
+      border-radius: 8px;
+      background: #fff;
+      padding: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      width: 80vw;
+      height: 60vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    #visual-area {
+      width: 100%;
+      height: 100%;
+    }
+
+    #controls {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    #controls button {
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: bold;
+      border: none;
+      border-radius: 5px;
+      background-color: #007BFF;
+      color: white;
+      cursor: pointer;
+      margin: 5px;
+    }
+
+    #controls button:hover {
+      background-color: #0056b3;
+    }
+
+    #input-area input {
+      padding: 8px;
+      font-size: 14px;
+      width: 200px;
+      margin: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      height: 36px;          /* force consistent height */
+      box-sizing: border-box;
+    }
+
+   /* Different background for insertAfter */
+    #insertAfter {
+      background-color: #e6f7ff; /* light blue */
+    }
+    #nodeValue {
+      padding: 8px;
+      font-size: 14px;
+      width: 200px;
+    } 
+    .line {
+      width: 2px;
+      height: 100px;
+      background: blue;
+      display: inline-block;
+      margin: 5px;
+    }
+
+    .link-text {
+      font-size: 12px;
+      font-family: "Courier New", monospace;
+      fill:  steelblue;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+    .link-text:hover {
+      fill: darkblue;
+    }
+
+
+
+  </style>
+
+</head>
+<body>
+<h2>Animation of Shortest Path a Weighted Graph</h2>
+
+<div id="output-frame">
+  <svg id="visual-area" width="800" height="600" xmlns="http://www.w3.org/2000/svg">
+  </svg>
+</div>
+  <div id="controls">
+    <label for="numNodes">Number of nodes:</label>
+    <input id="numNodes" type="number" placeholder="Enter a value" />
+
+    <label for="startNode">Start node:</label>
+    <select id="startNode"></select>
+
+    <button id="generateBtn">Generate Graph</button>
+    <button id="runBtn">Run Shortest Path</button>
+    <button id="resetGraph">Reset Graph</button>
+  </div>
+
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+
+  <script>
+
+
+    /* The animation is structured with drawing of a random initial
+       graph from used's supplied number of nodes. 
+       The basic functions are:
+     1. generate_graph => a backend function to create a random initial graph.
+     2. drawGraph => a frontend graph drawing utility which also allows users
+        to drag nodes using mouse either before or after execution of search. 
+     3. playAnimation => The main function that handles animation.
+     4. showStatusMessage => Displays status message
+     5. initialLoad => it wipes the canvas and prepares for grap drawing
+     6. A set of handlers for creating resouce box, intro box, reset graph and
+        run shortetst paths.
+    */
+
+
+    // Define the visual area with height and width
+    const svg = d3.select("#visual-area"),
+          width = +svg.attr("width"),
+          height = +svg.attr("height");
+ 
+
+    const defs = svg.append("defs"); 
+
+    // Define arrow head marker (outside the updates by reset)
+    svg.append("defs").append("marker")
+      .attr("id", "arrowBlue")
+      .attr("viewBox", "0 -5 10 10")
+      .attr("refX", 20)   // push arrow tip outside circle
+      .attr("refY", 0)
+      .attr("markerWidth", 5)
+      .attr("markerHeight", 5)
+      .attr("orient", "auto")
+      .append("path")
+      .attr("d", "M0,-5L10,0L0,5")
+      .attr("fill", "blue");
+
+    // Define status message element once
+    svg.append("text")
+       .attr("class", "status-message")
+       .attr("x", 400)
+       .attr("y", 450)
+       .attr("text-anchor", "middle")
+       .attr("fill", "green")
+       .attr("font-family", "Courier New")
+       .attr("font-size", "18px")
+       .attr("font-weight", "bold")
+       .style("opacity", 0);
+
+    // Function for creating info box resources (links to external sites)
+    function createResourceBox(svg, links) {
+       svg.selectAll("g.info-box").remove();
+
+       const svgWidth = svg.node().getBoundingClientRect().width;
+       const boxWidth = 225;
+       const margin = 10;
+       const xPos = svgWidth - boxWidth - margin; // Declare once here
+
+       // Define a group for the box
+       let infoBox = svg.append("g")
+         .attr("class", "info-box")
+         .attr("transform", `translate(${xPos},0)`);
+
+       // Background rectangle or a frame for resource box
+       infoBox.append("rect")
+         .attr("width", boxWidth)
+         .attr("height", 125)
+         .attr("fill", "#f9f9f9")
+         .attr("stroke", "black")
+         .attr("rx", 10)
+         .attr("ry", 10)
+         .attr("pointer-events", "none");
+
+       // Define title for the box
+       infoBox.append("text")
+         .attr("x", boxWidth / 2)
+         .attr("y", 25)
+         .attr("text-anchor", "middle")
+         .attr("font-size", "14px")
+         .attr("font-weight", "bold")
+         .text("Resources");
+
+       // Add the links line positions 
+       links.forEach((link, i) => {
+         let linkGroup = infoBox.append("a")
+           .attr("href", link.url)
+           .attr("target", "_blank");
+
+         linkGroup.append("text")
+           .attr("x", 10)
+           .attr("y", 50 + i * 20)
+           .attr("class", "link-text")
+           .text(link.label);
+       });
+     }
+
+
+    // Respositioning the resource box
+    function repositionResourceBox(svg) {
+       const svgWidth = +svg.attr("width") || svg.node().getBoundingClientRect().width;
+       const boxWidth = 225;
+       const margin = 0;
+       const xPos = svgWidth - boxWidth - margin; // Right top corner
+
+       svg.select("g.info-box")
+        .attr("transform", `translate(${xPos},20)`);
+    }
+
+    // Startup
+    requestAnimationFrame(() => {
+       createResourceBox(svg, resourceLinks);
+       repositionResourceBox(svg);
+    });
+
+
+      // Define actual links for info box resources
+    const resourceLinks = [
+        { label: "D3.js Homepage", url: "https://d3js.org" },
+        { label: "SVG Basics", url: "https://developer.mozilla.org/docs/Web/SVG" },
+        { label: "Transitions Guide", url: "https://observablehq.com/@d3/learn-d3-transitions" }
+  ];
+
+
+     // Show or hide program description box
+    let introBoxVisible = true;
+
+    // Function to create description box
+    function createIntroBox(svg, items) {
+       if (!introBoxVisible) return;
+
+       svg.selectAll("g.intro-box").remove();
+
+       let introBox = svg.append("g")
+         .attr("class", "intro-box")
+         .attr("transform", "translate(350,200)");
+
+       // Define background rectangle
+       introBox.append("rect")
+         .attr("width", 350)
+         .attr("height", 170)
+         .attr("fill", "#f9f9f9")
+         .attr("stroke", "black")
+         .attr("rx", 0)
+         .attr("ry", 0);
+
+       // Define title
+       introBox.append("text")
+         .attr("x", 160)
+         .attr("y", 25)
+         .attr("text-anchor", "middle")
+         .attr("font-size", "14px")
+         .attr("font-weight", "bold")
+         .text("Dijkstra's Shortest Path Algorithm");
+
+      // Add each item (description, link, or action)
+      items.forEach((item, i) => {
+        const yPos = 50 + i * 20;
+
+        if (item.url) {
+          // External link
+          let textEl = introBox.append("text")
+            .attr("x", 10)
+            .attr("y", yPos)
+            .attr("class", "link-text")
+            .style("cursor", "pointer")
+            .text(item.label);
+
+          textEl.on("click", () => window.open(item.url, "_blank"));
+        } else if (item.action) {
+
+          // Action link
+          let textEl = introBox.append("text")
+            .attr("x", 10)
+            .attr("y", yPos+65)
+            .attr("class", "link-text")
+            .style("cursor", "pointer")
+            .text(item.label);
+
+          textEl.on("click", () => {
+            item.action();
+            svg.selectAll("g.intro-box").remove();
+            introBoxVisible = false;
+          });
+        } else {
+             // Split multiline description text into separate lines 
+             addMultilineText(introBox, 10, yPos, item.label);
+        }
+      });
+    }
+
+    // Split long labels into multiline description
+    function addMultilineText(parent, x, y, textString) {
+
+      // Split on CRLF or LF
+      const lines = textString.split(/\r?\n/);
+
+      const text = parent.append("text")
+        .attr("x", x)
+        .attr("y", y)
+        .attr("font-family", "Courier New")
+        .attr("font-size", "14px")
+        .attr("fill", "black");
+
+      lines.forEach((line, i) => {
+        text.append("tspan")
+          .attr("x", x)              // reset x for each line
+          .attr("dy", i === 0 ? 0 : "1.2em") // vertical offset
+          .text(line);
+      });
+    }
+
+    // Displays status messages (includes multiline message)
+    function showStatus(message, color = "green") {
+      const status = svg.select("text.status-message");
+      if (status.empty()) {
+        console.warn("Status message element not found");
+        return;
+      }
+
+      // Clear any existing tspans
+      status.selectAll("tspan").remove();
+
+      // Split message into lines
+      const lines = message.split("\n");
+
+      // Append each line as a <tspan>
+      lines.forEach((line, i) => {
+        status.append("tspan")
+          .attr("x", 600)                    // Anchor at same x
+          .attr("dy", i === 0 ? 0 : "1.5em") // Vertical offset
+          .text(line);
+      });
+
+      // Apply color and fade transitions
+      status.interrupt()
+        .attr("fill", color)
+        .style("opacity", 1)
+        .transition().delay(2500).duration(5000)
+        .style("opacity", 0);
+    }
+
+
+    // Define a lengend box describing colors and shapes used
+    function createLegendBox(svg) {
+      svg.selectAll("g.legend-box").remove();
+
+      const boxWidth = 200;
+      const margin = 10;
+
+      const legend = svg.append("g")
+         .attr("class", "legend-box");
+
+         // Define arrow marker in <defs>
+      svg.append("defs").append("marker")
+         .attr("id", "legendArrow")
+         .attr("viewBox", "0 -5 10 10")
+         .attr("refX", 10)   // Position of arrow tip relative to line end
+         .attr("refY", 0)
+         .attr("markerWidth", 4)
+         .attr("markerHeight", 5)
+         .attr("orient", "auto")
+         .append("path")
+         .attr("d", "M0,-5L10,0L0,5")   // Arrowhead shape
+         .attr("fill", "blue");
+
+      legend.append("rect") // Define box for legend
+         .attr("width", boxWidth)
+         .attr("height", 150)
+         .attr("fill", "#f9f9f9")
+         .attr("stroke", "black")
+         .attr("rx", 20)
+         .attr("ry", 10);
+
+      legend.append("text")   // Define header 
+         .attr("x", boxWidth / 2)
+         .attr("y", 25)
+         .attr("text-anchor", "middle")
+         .attr("font-size", "14px")
+         .attr("font-weight", "bold")
+         .text("Legend");
+
+      // Define shapes needed with text descriptions
+      const items = [
+           { color: "orange", label: " Node on shortest path ", shape: "circle" },
+           { color: "#999", label: "Edge not in shortest path", shape: "line" },
+           { color: "blue", label: "Shortest path edges", shape: "arrow" },
+      ];
+
+      // Specifications for shape drawings
+      items.forEach((item, i) => {
+         const y = 50 + i * 25;
+         if (item.shape === "circle") {
+             legend.append("circle")
+               .attr("cx", 15).attr("cy", y).attr("r", 8)
+               .attr("fill", item.color);
+         } else if (item.shape === "line") {
+             legend.append("line")
+               .attr("x1", 5).attr("y1", y)
+               .attr("x2", 25).attr("y2", y)
+               .attr("stroke", item.color)
+               .attr("stroke-width", 3);
+         } else if (item.shape === "arrow") {
+             // Arrow shape is a line with arrow head
+             legend.append("line")
+               .attr("x1", 5).attr("y1", y)
+               .attr("x2", 25).attr("y2", y)
+               .attr("stroke", "blue")
+               .attr("stroke-width", 2)
+               .attr("marker-end", "url(#legendArrow)");
+         }
+
+         // Only texts
+         legend.append("text")
+             .attr("x", 40).attr("y", y + 4)
+             .text(item.label)
+             .attr("font-size", "12px")
+             .attr("alignment-baseline", "middle");
+         });
+
+
+         legend.append("text")
+             .attr("x", boxWidth / 2)
+             .attr("y", 125)
+             .attr("text-anchor", "middle")
+             .attr("font-size", "12px")
+             .attr("fill", "black")
+             .selectAll("tspan")
+             .data([
+               "Click on a target node for shortest",
+               "path. Path length under node labels",
+             ])
+             .enter()
+             .append("tspan")
+             .attr("x", boxWidth / 2)   // reset x for each line
+             .attr("dy", (d, i) => i === 0 ? 0 : "1.2em") // vertical spacing
+             .text(d => d);
+
+
+        legend.raise(); // Bring it to front
+     }
+
+     // Reposition function for legend box
+     function repositionLegendBox(svg) {
+        const svgWidth = +svg.attr("width") || svg.node().getBoundingClientRect().width;
+        const boxWidth = 200;
+        const margin = 10;
+        const xPos =  margin; //svgWidth - boxWidth - margin;
+
+        svg.select("g.legend-box")
+          .attr("transform", `translate(${xPos},10)`); // adjust y as needed
+     }
+
+     // Global variables for drawing and animation 
+     let currentGraph = null;
+     let snapshots = [];
+     let currentStep = 0;
+     let intervalId = null;
+
+     let nodeSelection = null;
+     let linkSelection = null;
+     let labelSelection = null;
+     let spath;
+
+     // Declare at top with other globals
+     let spathLabelSelection = null;
+
+     let r = 20; // Node circle representation 
+
+     // Define drawGraph function 
+     function drawGraph(graph, start = null) {
+        const width = 800, height = 600;
+
+        // Cleanup old groups if any 
+        svg.select("g.edges").remove();
+        svg.select("g.nodes").remove();
+        svg.select("g.labels").remove();
+        svg.select("g.spath").remove();
+        svg.select("g.spathLabels").remove();
+
+        // Define groups to handle each independently 
+        const edgeGroup  = svg.append("g").attr("class", "edges");
+        const nodeGroup  = svg.append("g").attr("class", "nodes");
+        const labelGroup = svg.append("g").attr("class", "labels");
+        const spathGroup = svg.append("g").attr("class", "spath");
+
+        // Backend  Data preparation for display 
+        const nodes = Object.keys(graph).map(id => ({ id }));
+        const links = buildLinks(graph);
+
+        // Simulation 
+        const simulation = initSimulation(nodes, links, width, height);
+
+        // UI layers 
+        const edgeLabels        = drawEdgeLabels(spathGroup, links);
+        const linkSelection     = drawLinks(edgeGroup, links);
+        const nodeSelection     = drawNodes(nodeGroup, nodes,start);
+        const labelSelection    = drawNodeLabels(labelGroup, nodes);
+        const spathLabelSelection = drawSpathLabels(spathGroup, nodes);
+
+        // Behaviors of dragging nodes to new position 
+        nodeSelection.call(makeDrag(simulation));
+
+        // Tick updates
+        simulation.on("tick", () => {
+          updateLinks(linkSelection);
+          updateEdgeLabels(edgeLabels);
+          updateNodes(nodeSelection, labelSelection, spathLabelSelection);
+        });
+
+
+        // Return references so that handlers can use them
+        return { 
+          linkSelection, 
+          nodeSelection, 
+          labelSelection, 
+          spathLabelSelection, 
+          spathGroup, 
+        };
+      }
+
+      // Build links from adjacency list (used in drawGraph)
+      function buildLinks(graph) {
+        const links = [];
+        for (const [src, neighbors] of Object.entries(graph)) {
+          for (const [tgt, weight] of neighbors) {
+            links.push({ source: src, target: tgt, weight });
+          }
+        }
+        return links;
+      }
+
+
+     // Simulation function which essentially adjust to mutual
+     // repel force to stay apart. You can readjust them 
+
+     function initSimulation(nodes, links, width, height) {
+       return d3.forceSimulation(nodes)
+         .force("link", d3.forceLink(links).id(d => d.id).distance(120))
+         .force("charge", d3.forceManyBody().strength(-300))
+         .force("center", d3.forceCenter(width / 2, height / 2));
+     }
+
+
+    // Define draw links function
+    function drawLinks(group, links) {
+      return group.selectAll("line.edge")   // select by class
+        .data(links)
+        .enter().append("line")
+        .attr("class", "edge")              // <-- critical
+        .attr("stroke", "#999")
+        .attr("stroke-width", 2)
+        .attr("marker-end", null);          // initially none
+    }
+
+    // Draw nodes 
+    function drawNodes(group, nodes, start) {
+      return group.selectAll("circle")
+        .data(nodes)
+        .enter().append("circle")
+        .attr("r", r)
+        .attr("fill", d => d.id === start ? "orange" : "lightgray");
+    }
+
+
+    // Edge labels which define edge weights
+
+    function drawEdgeLabels(group, links) {
+      return group.selectAll("text.edgeLabel")
+        .data(links)
+        .enter().append("text")
+        .attr("class", "edgeLabel")
+        .attr("text-anchor", "middle")
+        .attr("dy", -5)
+        .text(d => d.weight);
+    }
+
+
+    // Define node label for identity of nodes
+    function drawNodeLabels(group, nodes) {
+      const r = 20;
+      return group.selectAll("text.nodeLabel")
+        .data(nodes)
+        .enter().append("text")
+        .attr("class", "nodeLabel")
+        .text(d => d.id)
+        .attr("text-anchor", "middle")
+        .attr("dy", "5"); // centered initially
+    }
+
+    // Define shortest labels (for length) of shortest path 
+    function drawSpathLabels(group, nodes) {
+      const r = 20;
+      return group.selectAll("text.spathLabels")
+        .data(nodes)
+        .enter().append("text")
+        .attr("class", "spathLabels")
+        .text("")                // Initially empty
+        .attr("text-anchor", "middle")
+        .attr("dy", r + 5)       // Offset below circle
+        .style("opacity", 1);    // Make it visible 
+    }
+
+    // Update positions on tick 
+    function updateLinks(linkSel) {
+      linkSel
+        .attr("x1", d => d.source.x)
+        .attr("y1", d => d.source.y)
+        .attr("x2", d => d.target.x)
+        .attr("y2", d => d.target.y);
+    }
+
+
+    // Users may drag and adjust graph topology inside drawing space 
+    function makeDrag(simulation) {
+      return d3.drag()
+        .on("start", (event, d) => {
+          if (!event.active) simulation.alphaTarget(0.3).restart();
+          d.fx = d.x;
+          d.fy = d.y;
+        })
+        .on("drag", (event, d) => {
+          d.fx = event.x;
+          d.fy = event.y;
+        })
+        .on("end", (event, d) => {
+          if (!event.active) simulation.alphaTarget(0);
+          d.fx = null;
+          d.fy = null;
+        });
+    }
+
+    // Updates label representing edge weights
+    function updateEdgeLabels(edgeLabels) {
+      edgeLabels
+        .attr("x", d => (d.source.x + d.target.x) / 2)
+        .attr("y", d => (d.source.y + d.target.y) / 2);
+    }
+
+    // Updates node labels 
+    function updateNodes(nodeSel, nodeLabelSel, spathLabelSel) {
+      nodeSel.attr("cx", d => d.x).attr("cy", d => d.y);
+      nodeLabelSel.attr("x", d => d.x).attr("y", d => d.y);
+      spathLabelSel.attr("x", d => d.x).attr("y", d => d.y);
+    }
+
+    // Updates distances when available from shortes path computation
+    function updateDistances(distances, spathLabelSelection) {
+      spathLabelSelection
+        .text(d => distances[d.id] !== undefined ? distances[d.id] : "");
+
+    }
+
+    // Finds geometric distance. 
+    function distance(d) {
+      const dx = d.target.x - d.source.x;
+      const dy = d.target.y - d.source.y;
+      return Math.sqrt(dx * dx + dy * dy);
+    }
+
+    // Obtains path by tracing back through predecesssors
+    function getPath(predecessors, start, target) {
+      const path = [];
+      const pathEdges = new Set();
+      let current = target;
+
+      while (current) {
+        const prev = predecessors[current];
+        if (prev) {
+          // Directed edge: predecessor -> current
+          const key = `${String(prev).trim()}->${String(current).trim()}`;
+          pathEdges.add(key);
+        }
+        path.push(current);
+        if (current === start) break;
+        current = prev;
+      }
+
+      return { nodes: path.reverse(), edges: pathEdges };
+    }
+
+
+    function highlightPath(pathObj, nodeSelection, linkSelection, 
+                           labelSelection, spathLabelSelection, 
+                           distances) {
+
+        if (!nodeSelection || !linkSelection || !spathLabelSelection) {
+          console.error("highlightPath called with missing selections",
+                         labelSelection, nodeSelection, linkSelection, 
+                         spathLabelSelection);
+          return;
+        }
+
+         const r = 20;
+         const nodeSet = new Set(pathObj.nodes.map(String));
+
+         nodeSelection.transition().duration(600)
+            .attr("fill", d => nodeSet.has(String(d.id)) ? "orange" : "lightgray");
+
+         linkSelection.transition().duration(600)
+            .attr("stroke", d => {
+               const key = `${String(d.source.id).trim()}->${String(d.target.id).trim()}`;
+               return pathObj.edges.has(key) ? "blue" : "#999";
+            })
+            .attr("stroke-width", d => {
+               const key = `${String(d.source.id).trim()}->${String(d.target.id).trim()}`;
+               return pathObj.edges.has(key) ? 4 : 2;
+          })
+          .attr("marker-end", d => {
+               const key = `${String(d.source.id).trim()}->${String(d.target.id).trim()}`;
+               return pathObj.edges.has(key) ? "url(#arrowBlue)" : null;
+          })
+          .on("end", function(d) {
+              // After transition, raise only shortest path edges
+              const key = `${String(d.source.id).trim()}->${String(d.target.id).trim()}`;
+              if (pathObj.edges.has(key)) {
+                d3.select(this).raise();
+              }
+           });
+
+       // Shift node labels only for nodes in path
+       labelSelection.transition().duration(600)
+          .attr("dy", d => nodeSet.has(String(d.id)) ? -r + 13 : 4);
+
+        // Update shortest path labels
+        spathLabelSelection.transition().duration(600)
+          .style("opacity", d => nodeSet.has(String(d.id)) ? 1 : 0)
+          .attr("dy", 20)
+          .text(d => distances[d.id] ?? "");
+
+    }   
+
+
+    // Main animation function
+    function playAnimation(steps, distances, predecessors, paths,
+                           nodeSelection, linkSelection,
+                           labelSelection, spathLabelSelection) {
+        if (!Array.isArray(steps)) {
+            console.error("Steps is not an array:", steps);
+            return;
+          }
+
+          let currentStep = 0;
+          const r = 20;
+
+          const intervalId = setInterval(() => {
+           try {
+             if (currentStep >= steps.length) {
+               clearInterval(intervalId);
+
+               // 🔹 Final update of distances
+               updateDistances(distances, spathLabelSelection);
+
+               // Highlight final path
+               const target = "F"; // or whichever node you want
+               const pathObj = getPath(predecessors, startNode, target);
+
+               highlightPath(pathObj, nodeSelection, linkSelection, 
+                             labelSelection, spathLabelSelection, distances);
+
+               return;
+             }
+
+             const step = steps[currentStep];
+             if (step && step.type === "update") {
+                const fromId = step.from;
+                const toId   = step.to;
+
+                linkSelection.each(function(d) {
+                  if (
+                    (d.source.id === fromId && d.target.id === toId) ||
+                    (d.source.id === toId && d.target.id === fromId)
+                  ) {
+                    d3.select(this)
+                      .transition().duration(600)
+                      .attr("stroke", "blue")
+                      .attr("stroke-width", 3)
+                      .attr("marker-end", null)
+                  }
+                });
+
+               // Live update of distances during animation
+               updateDistances(distances, spathLabelSelection);
+            }
+
+            currentStep++;
+          } catch (err) {
+            console.error("Animation error:", err);
+            clearInterval(intervalId);
+          }
+        }, 1000);
+      }
+
+
+    function resetEdgeColors(svg) {
+       svg.selectAll("line.edge")
+         .attr("stroke", "#999")
+         .attr("stroke-width", 3)
+         .attr("marker-end", null); 
+     }
+
+
+    // Specify all event listeners. We need following event listeners: 
+    // 1. Generating graph using backend generator
+    // 2. Creating intro box and resource box.
+    // 3. Reseting graph
+    // 4. Running shortest path 
+
+    document.addEventListener("DOMContentLoaded", () => {
+      // Select the SVG once at startup
+      const svg = d3.select("#visual-area");
+
+ 
+
+      // Define resource links once, reuse everywhere
+
+      // --- Handler for generation of initial random weighted graph ---
+
+      document.getElementById("generateBtn").onclick = async () => {
+        const numNodes = parseInt(document.getElementById("numNodes").value, 10);
+
+        try {
+          const response = await fetch("/generate_graph", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ num_nodes: numNodes })
+          });
+
+          if (!response.ok) throw new Error("Backend error: " + response.status);
+
+          currentGraph = await response.json();
+
+          // Populate dropdown with node IDs
+          const startSelect = document.getElementById("startNode");
+          startSelect.innerHTML = "";
+          Object.keys(currentGraph).forEach(nodeId => {
+            const opt = document.createElement("option");
+            opt.value = nodeId;       // value is exactly the node id
+            opt.textContent = nodeId; // visible label
+            startSelect.appendChild(opt);
+          });
+
+          // Set default selection to first node
+          if (startSelect.options.length > 0) {
+            startSelect.value = startSelect.options[0].value;
+          }
+
+          // Keep startNode in sync with dropdown
+          startNode = startSelect.value;
+          startSelect.onchange = () => {
+            startNode = startSelect.value;
+            console.log("Selected start node:", startNode);
+          };
+
+          //console.log("Graph from backend:", currentGraph);
+
+          drawGraph(currentGraph);
+
+          // Reset input field
+          const numNodesInput = document.getElementById("numNodes");
+          numNodesInput.value = "";
+          //numNodesInput.blur();
+        } catch (err) {
+          console.error("Error generating graph:", err);
+          alert("Failed to generate graph from backend.");
+        }
+      };
+
+
+       // Handler for running shortest path 
+       // 1. Fetch shortest path data
+     document.getElementById("runBtn").addEventListener("click", async () => {
+        try {
+           const res = await fetch("/run_spath", {
+             method: "POST",
+             headers: { "Content-Type": "application/json" },
+             body: JSON.stringify({ graph: currentGraph, start: startNode })
+           });
+
+          if (!res.ok) throw new Error("Backend error: " + res.status);
+
+          const { distances, predecessors, paths, steps } = await res.json();
+
+          const { nodeSelection, linkSelection, labelSelection, spathLabelSelection } = drawGraph(currentGraph, startNode);
+        // Call playAnimation here
+        console.log("spathLabelSelection:", spathLabelSelection);
+        playAnimation(
+          steps,
+          distances,
+          predecessors,
+          paths,
+          nodeSelection,
+          linkSelection,
+          labelSelection,
+          spathLabelSelection
+        );
+
+
+        // 2. Attach click handler to highlight path
+       nodeSelection.on("click", function(event, d) {
+       const pathObj = getPath(predecessors, startNode, d.id);
+
+          console.log("Calling highlightPath with:",
+               nodeSelection, linkSelection, spathLabelSelection, distances);
+
+          highlightPath(pathObj,
+                     nodeSelection,
+                     linkSelection,
+                     labelSelection,
+                     spathLabelSelection,
+                     distances);
+           });
+
+
+         // After shortest path computation completes
+         requestAnimationFrame(() => {
+            createLegendBox(svg);
+            repositionLegendBox(svg);
+         });
+
+         // Keep it aligned on resize
+         window.addEventListener("resize", () => {
+           repositionLegendBox(svg);
+         });
+
+        showStatus("Displays shortest path from start to end node. \nClick on a vertex to generate a shortest\n path to new vertex.", "blue");
+
+        } catch (err) {
+             console.error("Error running shortest path:", err);
+             alert("Failed to run shortest path algorithm.");
+          }
+       });        // <-- closes the event listener
+    
+       // Handler for reset of graph to be fixed
+       document.getElementById("resetGraph").onclick = async () => {
+          const response = await fetch("/reset", { method: "POST" });
+          const result = await response.json();
+
+          console.log(result);
+
+          if (result.status === "reset") {
+            const startSelect = document.getElementById("startNode");
+                 startSelect.innerHTML = "";
+
+            // Clear only graph-related groups, not everything
+            // Don't remove resource box (g.info-box) 
+            svg.select("g.graph").remove();
+            svg.select("g.dfs").remove();
+            svg.select("g.intro-box").remove(); // Introbox displays initially 
+
+             // Recreate marker definitions again 
+             const defs = svg.select("defs");
+             if (defs.empty()) {
+               const newDefs = svg.append("defs");
+               newDefs.append("marker")
+                 .attr("id", "arrowBlue")
+                 .attr("viewBox", "0 -5 10 10")
+                 .attr("refX", 20)
+                 .attr("refY", 0)
+                 .attr("markerWidth", 5)
+                 .attr("markerHeight", 5)
+                 .attr("orient", "auto")
+                 .append("path")
+                 .attr("d", "M0,-5L10,0L0,5")
+                 .attr("fill", "blue");
+             }
+
+             // Status message
+             showStatus("Graph is reset. Enter a new number and generate a new graph.");
+             initialLoad();
+          }
+       };
+      // Startup UI 
+      createIntroBox(svg, [
+            { label: "Generates a weighted graph. Computes\r\n shortest paths using Dijkstra algo,\n Allows user to click on any node to\n display edges in shortest path.\n You can drag nodes to clear overlap of\n nodes and edges. \r\n" },
+            { label: " "},
+            { label: "Link to begin with an initial graph", action: () => initialLoad() }
+        ]);
+       createResourceBox(svg, resourceLinks);
+
+       // On resize
+       window.addEventListener("resize", () => {
+           createResourceBox(svg, resourceLinks); 
+       });
+
+    });
+
+    // Initial load function to start building graph
+    async function initialLoad() {
+
+       // Remove intro box permanently
+       d3.select("#visual-area").select("g.intro-box").remove();
+       introBoxVisible = false;
+
+       // Remove any existing spath group
+       d3.select("#visual-area").select("g.spath").remove();
+
+       // Status message
+       showStatus("Enter the number of nodes to generate a new graph.");
+    }
+
+  </script>
+</body>
+</html>
