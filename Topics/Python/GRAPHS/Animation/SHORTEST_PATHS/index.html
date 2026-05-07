@@ -114,7 +114,7 @@
 
     <button id="generateBtn">Generate Graph</button>
     <button id="runBtn">Run Shortest Path</button>
-    <button id="resetGraph">Reset Graph</button>
+    <button id="resetBtn">Reset Graph</button>
   </div>
 
   <script src="https://d3js.org/d3.v7.min.js"></script>
@@ -140,8 +140,27 @@
     const svg = d3.select("#visual-area"),
           width = +svg.attr("width"),
           height = +svg.attr("height");
- 
 
+   const resourceLayer = svg.append("g").attr("class", "resource-box");
+   const legendLayer   = svg.append("g").attr("class", "legend-box");
+   const graphLayer    = svg.append("g").attr("class", "graph");
+
+   // Define labels for info-box
+   const introBoxLabels = [
+            { label: "Generates a weighted graph. Computes\r\n shortest paths using Dijkstra algo,\n Allows user to click on any node to\n display edges in shortest path.\n You can drag nodes to clear overlap of\n nodes and edges. \r\n" },
+            { label: " "},
+            { label: "Link to begin with an initial graph", action: () => initialLoad() }
+        ]; 
+
+    // Define actual links for info box resources
+    const resourceLinks = [
+        { label: "D3.js Homepage", url: "https://d3js.org" },
+        { label: "SVG Basics", url: "https://developer.mozilla.org/docs/Web/SVG" },
+        { label: "Transitions Guide", url: "https://observablehq.com/@d3/learn-d3-transitions" }
+  ];
+
+
+    // Define class defs for arrows
     const defs = svg.append("defs"); 
 
     // Define arrow head marker (outside the updates by reset)
@@ -169,79 +188,52 @@
        .attr("font-weight", "bold")
        .style("opacity", 0);
 
-    // Function for creating info box resources (links to external sites)
-    function createResourceBox(svg, links) {
-       svg.selectAll("g.info-box").remove();
 
-       const svgWidth = svg.node().getBoundingClientRect().width;
-       const boxWidth = 225;
-       const margin = 10;
-       const xPos = svgWidth - boxWidth - margin; // Declare once here
+    // Displays status messages (includes multiline message)
+    function showStatus(message, color = "green") {
+      const status = svg.select("text.status-message");
+      if (status.empty()) {
+        console.warn("Status message element not found");
+        return;
+      }
 
-       // Define a group for the box
-       let infoBox = svg.append("g")
-         .attr("class", "info-box")
-         .attr("transform", `translate(${xPos},0)`);
+      // Clear any existing tspans
+      status.selectAll("tspan").remove();
 
-       // Background rectangle or a frame for resource box
-       infoBox.append("rect")
-         .attr("width", boxWidth)
-         .attr("height", 125)
-         .attr("fill", "#f9f9f9")
-         .attr("stroke", "black")
-         .attr("rx", 10)
-         .attr("ry", 10)
-         .attr("pointer-events", "none");
+      // Split message into lines
+      const lines = message.split("\n");
 
-       // Define title for the box
-       infoBox.append("text")
-         .attr("x", boxWidth / 2)
-         .attr("y", 25)
-         .attr("text-anchor", "middle")
-         .attr("font-size", "14px")
-         .attr("font-weight", "bold")
-         .text("Resources");
+      // Append each line as a <tspan>
+      lines.forEach((line, i) => {
+        status.append("tspan")
+          .attr("x", 600)                    // Anchor at same x
+          .attr("dy", i === 0 ? 0 : "1.5em") // Vertical offset
+          .text(line);
+      });
 
-       // Add the links line positions 
-       links.forEach((link, i) => {
-         let linkGroup = infoBox.append("a")
-           .attr("href", link.url)
-           .attr("target", "_blank");
-
-         linkGroup.append("text")
-           .attr("x", 10)
-           .attr("y", 50 + i * 20)
-           .attr("class", "link-text")
-           .text(link.label);
-       });
-     }
-
-
-    // Respositioning the resource box
-    function repositionResourceBox(svg) {
-       const svgWidth = +svg.attr("width") || svg.node().getBoundingClientRect().width;
-       const boxWidth = 225;
-       const margin = 0;
-       const xPos = svgWidth - boxWidth - margin; // Right top corner
-
-       svg.select("g.info-box")
-        .attr("transform", `translate(${xPos},20)`);
+      // Apply color and fade transitions
+      status.interrupt()
+        .attr("fill", color)
+        .style("opacity", 1)
+        .transition().delay(2500).duration(5000)
+        .style("opacity", 0);
     }
 
-    // Startup
-    requestAnimationFrame(() => {
-       createResourceBox(svg, resourceLinks);
-       repositionResourceBox(svg);
-    });
+    function showEmptyMessage() {
+      svg.select(".empty-placeholder")
+        .interrupt("status")
+        .style("opacity", 1)
+        .transition("status")
+        .delay(1000)
+        .duration(2000)
+        .style("opacity", 0);
+    }
 
-
-      // Define actual links for info box resources
-    const resourceLinks = [
-        { label: "D3.js Homepage", url: "https://d3js.org" },
-        { label: "SVG Basics", url: "https://developer.mozilla.org/docs/Web/SVG" },
-        { label: "Transitions Guide", url: "https://observablehq.com/@d3/learn-d3-transitions" }
-  ];
-
+    function hideEmptyMessage() {
+      svg.select(".empty-placeholder")
+        .interrupt("status")
+        .style("opacity", 0);
+    }
 
      // Show or hide program description box
     let introBoxVisible = true;
@@ -331,36 +323,65 @@
       });
     }
 
-    // Displays status messages (includes multiline message)
-    function showStatus(message, color = "green") {
-      const status = svg.select("text.status-message");
-      if (status.empty()) {
-        console.warn("Status message element not found");
-        return;
-      }
+   // hideEmptyMessage(); // Hide Empty message
 
-      // Clear any existing tspans
-      status.selectAll("tspan").remove();
+    createIntroBox(svg, introBoxLabels);
+ 
+    window.addEventListener("resize", () => {
+       createResourceBox(svg, resourceLinks);
+   });
 
-      // Split message into lines
-      const lines = message.split("\n");
 
-      // Append each line as a <tspan>
-      lines.forEach((line, i) => {
-        status.append("tspan")
-          .attr("x", 600)                    // Anchor at same x
-          .attr("dy", i === 0 ? 0 : "1.5em") // Vertical offset
-          .text(line);
-      });
 
-      // Apply color and fade transitions
-      status.interrupt()
-        .attr("fill", color)
-        .style("opacity", 1)
-        .transition().delay(2500).duration(5000)
-        .style("opacity", 0);
-    }
+    // Function for creating info box resources (links to external sites)
+    function createResourceBox(svg, links) {
+       svg.selectAll("g.info-box").remove();
 
+       const svgWidth = svg.node().getBoundingClientRect().width;
+       const boxWidth = 225;
+       const margin = 10;
+       const xPos = svgWidth - boxWidth - margin; // Declare once here
+
+       // Define a group for the box
+       let infoBox = svg.append("g")
+         .attr("class", "info-box")
+         .attr("transform", `translate(${xPos},0)`);
+
+       // Background rectangle or a frame for resource box
+       infoBox.append("rect")
+         .attr("width", boxWidth)
+         .attr("height", 125)
+         .attr("fill", "#f9f9f9")
+         .attr("stroke", "black")
+         .attr("rx", 10)
+         .attr("ry", 10)
+         .attr("pointer-events", "none");
+
+       // Define title for the box
+       infoBox.append("text")
+         .attr("x", boxWidth / 2)
+         .attr("y", 25)
+         .attr("text-anchor", "middle")
+         .attr("font-size", "14px")
+         .attr("font-weight", "bold")
+         .text("Resources");
+
+       // Add the links line positions 
+       links.forEach((link, i) => {
+         let linkGroup = infoBox.append("a")
+           .attr("href", link.url)
+           .attr("target", "_blank");
+
+         linkGroup.append("text")
+           .attr("x", 10)
+           .attr("y", 50 + i * 20)
+           .attr("class", "link-text")
+           .text(link.label);
+       });
+     }
+
+     svg.append("g").attr("class", "resource-layer");
+     createResourceBox(svg, resourceLinks);
 
     // Define a lengend box describing colors and shapes used
     function createLegendBox(svg) {
@@ -448,8 +469,8 @@
              .attr("fill", "black")
              .selectAll("tspan")
              .data([
-               "Click on a target node for shortest",
-               "path. Path length under node labels",
+               "Click a target for the shortest path",
+               "Path lengths under node labels",
              ])
              .enter()
              .append("tspan")
@@ -827,29 +848,10 @@
     // 3. Reseting graph
     // 4. Running shortest path 
 
-    document.addEventListener("DOMContentLoaded", () => {
-      // Select the SVG once at startup
-      const svg = d3.select("#visual-area");
 
- 
-
-      // Define resource links once, reuse everywhere
-
-      // --- Handler for generation of initial random weighted graph ---
-
-      document.getElementById("generateBtn").onclick = async () => {
-        const numNodes = parseInt(document.getElementById("numNodes").value, 10);
-
+      function generateNewGraph(numNodes) {
+    
         try {
-          const response = await fetch("/generate_graph", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ num_nodes: numNodes })
-          });
-
-          if (!response.ok) throw new Error("Backend error: " + response.status);
-
-          currentGraph = await response.json();
 
           // Populate dropdown with node IDs
           const startSelect = document.getElementById("startNode");
@@ -884,13 +886,10 @@
         } catch (err) {
           console.error("Error generating graph:", err);
           alert("Failed to generate graph from backend.");
-        }
-      };
+        };
+     };
 
-
-       // Handler for running shortest path 
-       // 1. Fetch shortest path data
-     document.getElementById("runBtn").addEventListener("click", async () => {
+      async function execute_shortestpath_algorithm(currentGraph, startNode) {
         try {
            const res = await fetch("/run_spath", {
              method: "POST",
@@ -944,67 +943,93 @@
            repositionLegendBox(svg);
          });
 
-        showStatus("Displays shortest path from start to end node. \nClick on a vertex to generate a shortest\n path to new vertex.", "blue");
+        showStatus("Displays shortest path from source to F. Click a different \ntarget node to generate a shortest path from source.", "blue");
 
         } catch (err) {
              console.error("Error running shortest path:", err);
              alert("Failed to run shortest path algorithm.");
           }
-       });        // <-- closes the event listener
+
+      };
+ 
+
+      function execute_reset(startNode, result) {
+           if (result.status === "reset") {
+             const startSelect = document.getElementById("startNode");
+             startSelect.innerHTML = "";
+
+             // Clear graph-related groups
+             svg.select("g.edges").remove();
+             svg.select("g.nodes").remove();
+             svg.select("g.labels").remove();
+             svg.select("g.spath").remove();
+             svg.selectAll("g.legend-box").remove();
+
+             // Recreate marker defs
+             svg.select("defs").remove();
+             const defs = svg.append("defs");
+             defs.append("marker")
+               .attr("id", "arrowBlue")
+               .attr("viewBox", "0 -5 10 10")
+               .attr("refX", 20)
+               .attr("refY", 0)
+               .attr("markerWidth", 5)
+               .attr("markerHeight", 5)
+               .attr("orient", "auto")
+               .append("path")
+               .attr("d", "M0,-5L10,0L0,5")
+               .attr("fill", "blue");
+
+             // Status message
+             showStatus("Graph is reset. Enter a new number and generate a new graph.");
+
+           }
+
+       };
+
+
+      // Handler for generation of initial random weighted graph 
+      document.addEventListener("DOMContentLoaded", () => {
+        const svg = d3.select("#visual-area");  // fixed ID
+
+        document.getElementById("generateBtn").onclick = async () => {
+
+            const numNodes = parseInt(document.getElementById("numNodes").value, 10);
+            const response = await fetch("/generate_graph", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ num_nodes: numNodes })
+            });
+
+            if (!response.ok) throw new Error("Backend error: " + response.status);
+
+             currentGraph = await response.json();
+
+
+             generateNewGraph(numNodes);
+
+          }; // End of Generate Handler
+
+
+          // Handler for running shortest path 
+         document.getElementById("runBtn").addEventListener("click", async () => {
+             execute_shortestpath_algorithm(currentGraph, startNode);
+         }); // End of Run Handler
     
-       // Handler for reset of graph to be fixed
-       document.getElementById("resetGraph").onclick = async () => {
+         // Handler for reset of graph to be fixed
+        document.getElementById("resetBtn").onclick = async () => {
           const response = await fetch("/reset", { method: "POST" });
           const result = await response.json();
 
           console.log(result);
 
-          if (result.status === "reset") {
-            const startSelect = document.getElementById("startNode");
-                 startSelect.innerHTML = "";
+          execute_reset(startNode, result);
 
-            // Clear only graph-related groups, not everything
-            // Don't remove resource box (g.info-box) 
-            svg.select("g.graph").remove();
-            svg.select("g.dfs").remove();
-            svg.select("g.intro-box").remove(); // Introbox displays initially 
+         }; // End of Reset Handler
 
-             // Recreate marker definitions again 
-             const defs = svg.select("defs");
-             if (defs.empty()) {
-               const newDefs = svg.append("defs");
-               newDefs.append("marker")
-                 .attr("id", "arrowBlue")
-                 .attr("viewBox", "0 -5 10 10")
-                 .attr("refX", 20)
-                 .attr("refY", 0)
-                 .attr("markerWidth", 5)
-                 .attr("markerHeight", 5)
-                 .attr("orient", "auto")
-                 .append("path")
-                 .attr("d", "M0,-5L10,0L0,5")
-                 .attr("fill", "blue");
-             }
+     }); //Ends DOM
 
-             // Status message
-             showStatus("Graph is reset. Enter a new number and generate a new graph.");
-             initialLoad();
-          }
-       };
-      // Startup UI 
-      createIntroBox(svg, [
-            { label: "Generates a weighted graph. Computes\r\n shortest paths using Dijkstra algo,\n Allows user to click on any node to\n display edges in shortest path.\n You can drag nodes to clear overlap of\n nodes and edges. \r\n" },
-            { label: " "},
-            { label: "Link to begin with an initial graph", action: () => initialLoad() }
-        ]);
-       createResourceBox(svg, resourceLinks);
 
-       // On resize
-       window.addEventListener("resize", () => {
-           createResourceBox(svg, resourceLinks); 
-       });
-
-    });
 
     // Initial load function to start building graph
     async function initialLoad() {

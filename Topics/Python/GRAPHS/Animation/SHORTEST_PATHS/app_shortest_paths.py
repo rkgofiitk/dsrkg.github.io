@@ -22,7 +22,6 @@ def generate_random_graph():
 @app.route("/run_spath", methods=["POST"])
 def run_spath():
     data = request.get_json()
-    print("Received data:", data)   # 🔹 log the payload
     
     graph = data["graph"]
     start = data["start"]
@@ -41,10 +40,10 @@ def run_spath():
 
 @app.route("/reset", methods=["POST"])
 def reset():
-    global currentGraph, snapshots, patgEdges, currentStep, startNode
+    global currentGraph, snapshots, pathEdges, currentStep, startNode
     currentGraph = None
     startNode = None
-    currentStep = 0 
+    currentStep = 0
     snapshots = []
     pathEdges = set()
     return jsonify({"status": "reset"})
