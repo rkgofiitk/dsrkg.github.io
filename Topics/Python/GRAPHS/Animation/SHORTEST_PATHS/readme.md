@@ -1,1 +1,3 @@
 ## Readme for Shortest Path 
+
+The folder consists of four files including "readme.md". The three other files, app_shortest_path.py, shortest_path.py are related to execution and animation of Dijkstra's famous single source shortest path algorithm. It shows the exploration of graph and collection of edge weights for relaxation step and finalization of the shortes path to nearest next node of the graph from the source. The animation stops identifying shortest path to a node labeled F from the source node. The animation is interactive, so the user can click on a different target node of the graph to view the shortest path from the source. The shortest path lengths along the path are below the node labels of the identified shortest path from the source to the target. 
