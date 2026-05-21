@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #f0f0f0;
+      flex-direction: column;
+    }
+
+    #output-frame {
+      border: 3px solid #333;
+      border-radius: 8px;
+      background: #fff;
+      padding: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      width: 80vw;
+      height: 60vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    #visual-area {
+      width: 100%;
+      height: 100%;
+    }
+
+    #controls {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    #controls button {
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: bold;
+      border: none;
+      border-radius: 5px;
+      background-color: #007BFF;
+      color: white;
+      cursor: pointer;
+      margin: 5px;
+    }
+
+    #controls button:hover {
+      background-color: #0056b3;
+    }
+
+    #input-area input {
+      padding: 8px;
+      font-size: 14px;
+      width: 200px;
+      margin: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      height: 36px;
+      box-sizing: border-box;
+    }
+    .line {
+      width: 2px;
+      height: 100px;
+      background: blue;
+      display: inline-block;
+      margin: 5px;
+    }
+
+    .link-text {
+      font-size: 12px;
+      font-family: "Courier New", monospace;
+      fill:  steelblue;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+    .link-text:hover {
+      fill: darkblue;
+    }
+
+
+
+  </style>
+</head>
+<body>
+  <h2>Animation of Hashing By Open Addressing</h2>
+  <!-- Framed container -->
+  <div id="output-frame">
+ <svg id="visual-area" width="800" height="600" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+  </svg>
+    </svg>
+  </div>
+
+  <!-- Controls -->
+  <div id="controls">
+    <button id="insertBtn">Insert</button>
+    <button id="deleteBtn">Delete</button>
+    <button id="findBtn">Find</button>
+    <button id="createBtn">Create</button>
+    <select id="probeSelect">
+       <option value="linear">Linear Probe</option>
+       <option value="quadratic">Quadratic Probe</option>
+     </select>
+  </div>
+
+  <!-- Input area -->
+  <div id="input-area">
+    <input type="text" id="sizeValue" placeholder="Enter size">
+  </div>
+  <pre id="output"></pre>   <!-- 👈 This is the missing element -->
+  
+  <!-- Load libraries -->
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script>
+
+
+   // Global SVG reference
+   const svg = d3.select("#visual-area"); 
+
+   const resourceLayer = svg.append("g").attr("class", "resource-box");
+   const legendLayer   = svg.append("g").attr("class", "legend-box");
+   const tableLayer    = svg.append("g").attr("class", "hash-table");
+
+   // Define resource links 
+   const resourceLinks = [
+       { label: "D3.js Homepage", url: "https://d3js.org" },
+       { label: "SVG Basics", url: "https://developer.mozilla.org/docs/Web/SVG" },
+       { label: "Transitions Guide", url: "https://observablehq.com/@d3/learn-d3-transitions" }
+   ];
+
+
+   // Define info box. Displayed when program starts
+   introBoxLabels = [
+      { label: "Supports Create, Insert,  Delete, Find,\n Reset, and collision statistics.\n Insert, Delete, Find each requires\n two inputs. User can drag and position\n table inside viewing area.\r\n" }, // plain description with CRLF
+      { label: "Link to begin with an empty hash table", action: () => showEmptyMessage() }
+   ] 
+
+
+    // Create status message element once
+    svg.append("text")
+       .attr("class", "status-message")
+       .attr("x", 395)
+       .attr("y", 380)
+       .attr("text-anchor", "middle")
+       .attr("fill", "green")
+       .attr("font-family", "Courier New")
+       .attr("font-size", "20px")
+       .attr("font-weight", "bold")
+       .style("opacity", 0);
+
+    // At setup display empty message
+    svg.append("text")
+      .attr("class", "empty-placeholder")
+      .attr("x",  400)
+      .attr("y", 200)
+      .attr("text-anchor", "middle")
+      .attr("fill", "gray")
+      .attr("font-family", "Courier New")
+      .attr("font-size", "20px")
+      .style("opacity", 0)
+      .text("Empty Table");
+
+function showStatus(message, color = "green") {
+      const status = svg.select("text.status-message");
+      if (status.empty()) {
+        console.warn("Status message element not found");
+        return;
+      }
+
+      // Clear any existing tspans
+      status.selectAll("tspan").remove();
+
+      // Split message into lines
+      const lines = message.split("\n");
+
+      // Append each line as a <tspan>
+      lines.forEach((line, i) => {
+        status.append("tspan")
+          .attr("x", 600)                    // Anchor at same x
+          .attr("dy", i === 0 ? 0 : "1.5em") // Vertical offset
+          .text(line);
+      });
+
+      // Apply color and fade transitions
+      status.interrupt()
+        .attr("fill", color)
+        .style("opacity", 1)
+        .transition().delay(2500).duration(5000)
+        .style("opacity", 0);
+    }
+
+
+    function showEmptyMessage() {
+      svg.select(".empty-placeholder")
+        .interrupt("status")
+        .style("opacity", 1)
+        .transition("status")
+        .delay(1000)
+        .duration(2000)
+        .style("opacity", 0);
+    }
+
+    function hideEmptyMessage() {
+      svg.select(".empty-placeholder")
+        .interrupt("status")
+        .style("opacity", 0);
+    }
+
+        // Define toggle for info-box
+    let introBoxVisible = true;
+
+    function createIntroBox(svg, items) {
+      if (!introBoxVisible) return;
+
+      svg.selectAll("g.intro-box").remove();
+
+      let introBox = svg.append("g")
+        .attr("class", "intro-box")
+        .attr("transform", "translate(200,125)");
+
+      // Background rectangle
+      introBox.append("rect")
+        .attr("width", 350)
+        .attr("height", 150)
+        .attr("fill", "#f9f9f9")
+        .attr("stroke", "black")
+        .attr("rx", 0)
+        .attr("ry", 0);
+
+      // Title
+      introBox.append("text")
+        .attr("x", 160)
+        .attr("y", 25)
+        .attr("text-anchor", "middle")
+        .attr("font-size", "14px")
+        .attr("font-weight", "bold")
+        .text("Hashing with Open Addressing");
+
+      // Add each item (description, link, or action)
+      items.forEach((item, i) => {
+        const yPos = 50 + i * 20;
+
+        if (item.url) {
+          // External link
+          let textEl = introBox.append("text")
+            .attr("x", 10)
+            .attr("y", yPos)
+            .attr("class", "link-text")
+            .style("cursor", "pointer")
+            .text(item.label);
+
+          textEl.on("click", () => window.open(item.url, "_blank"));
+        } else if (item.action) {
+          // Action link
+          let textEl = introBox.append("text")
+            .attr("x", 10)
+            .attr("y", yPos+65)
+            .attr("class", "link-text")
+            .style("cursor", "pointer")
+            .text(item.label);
+
+          textEl.on("click", () => {
+            item.action();
+            svg.selectAll("g.intro-box").remove();
+            introBoxVisible = false;
+          });
+        } else {
+             // Multiline description text
+             addMultilineText(introBox, 10, yPos, item.label);
+         }
+      });
+    }
+
+    function addMultilineText(parent, x, y, textString) {
+      // Split on CRLF or LF
+      const lines = textString.split(/\r?\n/);
+
+      const text = parent.append("text")
+        .attr("x", x)
+        .attr("y", y)
+        .attr("font-family", "Courier New")
+        .attr("font-size", "14px")
+        .attr("fill", "black");
+
+      lines.forEach((line, i) => {
+        text.append("tspan")
+          .attr("x", x)    // Reset x for each line
+          .attr("dy", i === 0 ? 0 : "1.2em") // Vertical offset
+          .text(line);
+      });
+    }
+
+    // INITIALIZE and create info-box
+    createIntroBox(svg, introBoxLabels);
+
+
+    // Resource box 
+    function createResourceBox(svg, links) {
+      svg.select("g.resource-layer").selectAll("g.info-box").remove();
+
+      // Use SVG's internal width if available
+      const svgWidth = svg.node().getBoundingClientRect().width;
+
+      const boxWidth = 225, boxHeight = 125, padding = 10;
+      const xPos = svgWidth - boxWidth - padding;
+      const yPos = 25;
+
+      // Create group inside resource layer
+      let infoBox = svg.select("g.resource-layer")
+        .append("g")
+        .attr("class", "info-box")
+        .attr("transform", `translate(${xPos},${yPos})`);
+
+      infoBox.append("rect")
+        .attr("width", boxWidth)
+        .attr("height", boxHeight)
+        .attr("fill", "#f9f9f9")
+        .attr("stroke", "black")
+        .attr("rx", 10)
+        .attr("ry", 10);
+
+      infoBox.append("text")
+        .attr("x", boxWidth / 2)
+        .attr("y", 25)
+        .attr("text-anchor", "middle")
+        .attr("font-size", "14px")
+        .attr("font-weight", "bold")
+        .text("Resources");
+
+      links.forEach((link, i) => {
+        let linkGroup = infoBox.append("a")
+          .attr("href", link.url)
+          .attr("target", "_blank");
+
+        linkGroup.append("text")
+          .attr("x", 10)
+          .attr("y", 50 + i * 20)
+          .attr("class", "link-text")
+          .text(link.label);
+      });
+    }
+
+
+    // Create resource layer and resource box
+    svg.append("g").attr("class", "resource-layer");
+    createResourceBox(svg, resourceLinks);
+
+
+    // Configure zoom to only allow panning
+    // Moves entire hash table with mouse drag
+    const zoom = d3.zoom()
+      .scaleExtent([1, 1]) // lock zoom at 1x
+      .on("zoom", (event) => {
+        tableLayer.attr("transform", event.transform);
+      });
+
+    // Bind zoom to the SVG
+    svg.call(zoom); 
+
+
+    const bucketCount = 8;
+    const bucketWidth = 80;
+    const bucketHeight = 40;
+    const startX = 50;
+    const startY = 50;
+    const spacing = 60;
+
+    function drawHashTable(tableData) {
+      const startX = 80, startY = 30;
+      const nodeWidth = 120, nodeHeight = 30, spacing = 5;
+
+      // Bind data to slot rects
+      const rects = tableLayer.selectAll("rect.node")
+        .data(tableData, d => d.index);
+
+      // ENTER
+      rects.enter()
+        .append("rect")
+        .attr("class", "node")
+        .attr("width", nodeWidth)
+        .attr("height", nodeHeight)
+        .attr("x", startX)
+        .attr("y", d => startY + d.index * (nodeHeight + spacing))
+        .attr("stroke", d => {
+            if (d.status === "filled") return "white";
+            return "black"; 
+         })
+        .merge(rects) // UPDATE
+        .attr("fill", d => {
+                if (d.status === "filled") return "steelblue";
+                if (d.status === "deleted") return "red";
+                    return "lightgreen";
+         });
+
+        rects.exit().remove();
+
+        // Labels for slot index
+        const labels = tableLayer.selectAll("text.node-label")
+          .data(tableData, d => d.index);
+
+        labels.enter()
+          .append("text")
+          .attr("class", "node-label")
+          .attr("x", startX - 30)
+          .attr("text-anchor", "end")
+          .attr("font-size", "12")
+          .merge(labels)
+          .attr("y", d => startY + d.index * (nodeHeight + spacing) + nodeHeight / 2 + 5)
+          .text(d => d.index);
+
+      labels.exit().remove();
+
+      // Values
+      const values = tableLayer.selectAll("text.node-value")
+        .data(tableData, d => d.index);
+
+     // In drawHashTable
+      values.enter()
+        .append("text")
+        .attr("class", "node-value")
+        .attr("x", startX + nodeWidth / 2)
+        .attr("text-anchor", "middle")
+        .attr("font-size", "14")
+        .merge(values)
+        .attr("y", d => startY + d.index * (nodeHeight + spacing) + nodeHeight / 2 + 5)
+        .attr("fill", d => {
+          if (d.status === "filled") return "white"; // white on steelblue
+          return "black";    // black on lightgreen or red
+        })
+        .text(d => d.status === "empty" ? "EMPTY" :
+                   d.status === "deleted" ? "DELETED" :
+                   `${d.key}:${d.value}`);
+
+            values.exit().remove();
+    }
+
+    function updateVisualization(tableData) {
+      const startX = 80, startY = 30;
+      const nodeWidth = 120, nodeHeight = 30, spacing = 5;
+
+      // Update slot colors
+      tableLayer.selectAll("rect.node")
+        .data(tableData, d => d.index)
+        .attr("fill", d => {
+          if (d.status === "filled") return "steelblue";   // filled slot
+          if (d.status === "deleted") return "red"; // deleted slot
+          return "lightgreen"; // empty slot
+        });
+
+      // Update slot labels
+      const values = tableLayer.selectAll("text.node-value")
+        .data(tableData, d => d.index);
+
+      values.enter()
+        .append("text")
+        .attr("class", "node-value")
+        .merge(values)
+        .attr("x", startX + nodeWidth / 2)
+        .attr("y", d => startY + d.index * (nodeHeight + spacing) + nodeHeight / 2 + 5)
+        .attr("text-anchor", "middle")
+        .attr("font-size", "14")
+        .attr("fill", d => {
+          if (d.status === "filled") return "white";
+          if (d.status === "deleted") return "black";
+          return "black";
+        })
+        .text(d => d.status === "empty" ? "EMPTY" :
+             d.status === "deleted" ? "DELETED" :
+             `${d.key}:${d.value}`);
+
+      values.exit().remove();
+    }
+
+function moveDown(selection, startY, nodeHeight, spacing) {
+  selection
+    .attr("y", 0) // start at top
+    .transition().duration(800)
+    .attr("y", d => startY + d.index * (nodeHeight + spacing));
+}
+
+function slideRight(selection, startX) {
+  selection
+    .attr("x", 750) // start off to the right
+    .transition().duration(800)
+    .attr("x", startX);
+}
+
+
+function animateInsert(node, probeSequence, tableData) {
+  const startX = 80, startY = 30;
+  const nodeWidth = 120, nodeHeight = 30, spacing = 5;
+
+  // Temporary rect + label
+  const rect = tableLayer.append("rect")
+    .attr("class", "insert-temp")
+    .attr("width", nodeWidth)
+    .attr("height", nodeHeight)
+    .attr("x", 400)
+    .attr("y", 0)
+    .attr("fill", "steelblue")
+    .attr("stroke", "white");
+
+const text = tableLayer.append("text")
+  .attr("class", "insert-temp-label")
+  .attr("x", 400 + nodeWidth / 2)
+  .attr("y", 20)
+  .attr("text-anchor", "middle")
+  .attr("font-size", "14")
+  .attr("fill", "white")   // temporary label white on steelblue
+  .text(`${node.key}:${node.value}`);
+
+  // Recursive animation through probe sequence
+  function stepProbe(i) {
+    if (i >= probeSequence.length) {
+      rect.remove();
+      text.remove();
+      updateVisualization(tableData); // final update
+      return;
+    }
+
+    const slotIndex = probeSequence[i];
+    const finalY = startY + slotIndex * (nodeHeight + spacing);
+
+    rect.transition().duration(800)
+      .attr("y", finalY)
+      .on("end", function() {
+        d3.select(this).transition().duration(800)
+          .attr("x", startX)
+          .on("end", () => stepProbe(i + 1));
+      });
+
+    text.transition().duration(800)
+      .attr("y", finalY + nodeHeight / 2 + 5)
+      .on("end", function() {
+        d3.select(this).transition().duration(800)
+          .attr("x", startX + nodeWidth / 2);
+      });
+  }
+
+  stepProbe(0);
+}
+
+function animateDelete(node, probeSequence, tableData) {
+  const startX = 80, startY = 30;
+  const nodeWidth = 120, nodeHeight = 30, spacing = 5;
+
+  // Find the slot index actually deleted
+  const slotIndex = probeSequence[probeSequence.length - 1];
+  const slotY = startY + slotIndex * (nodeHeight + spacing);
+
+  // Temporary rect + label at slot position
+  const rect = tableLayer.append("rect")
+    .attr("class", "delete-temp")
+    .attr("width", nodeWidth)
+    .attr("height", nodeHeight)
+    .attr("x", startX)
+    .attr("y", slotY)
+    .attr("fill", "red")
+    .attr("stroke", "black");
+
+  const text = tableLayer.append("text")
+    .attr("class", "delete-temp-label")
+    .attr("x", startX + nodeWidth / 2)
+    .attr("y", slotY + nodeHeight / 2 + 5)
+    .attr("text-anchor", "middle")
+    .attr("font-size", "14")
+    .text(`${node.key}:${node.value}`);
+
+  // Animate out: move right and up, then fade
+  rect.transition().duration(800)
+    .attr("x", 400)
+    .attr("y", 0)
+    .style("opacity", 0)
+    .on("end", () => {
+      rect.remove();
+      text.remove();
+      updateVisualization(tableData); // recolor slot as DELETED
+    });
+
+  text.transition().duration(800)
+    .attr("x", 400 + nodeWidth / 2)
+    .attr("y", 20)
+    .style("opacity", 0);
+}
+
+function animateFind(node, probeSequence, tableData, found) {
+  const nodeHeight = 30, spacing = 5, startY = 30, startX = 80;
+
+  let i = 0;
+
+  function stepProbe() {
+    if (i >= probeSequence.length) {
+      // Final highlight
+      const idx = probeSequence[probeSequence.length - 1];
+      const slotY = startY + idx * (nodeHeight + spacing);
+
+      // Draw a temporary highlight rect at the found/not found slot
+      const highlight = tableLayer.append("rect")
+        .attr("x", startX)
+        .attr("y", slotY)
+        .attr("width", 120)
+        .attr("height", nodeHeight)
+        .attr("fill", found ? "lightgreen" : "pink")
+        .attr("opacity", 0.6);
+
+      highlight.transition().duration(800)
+        .style("opacity", 0)
+        .remove();
+
+      return;
+    }
+
+    const idx = probeSequence[i];
+    const slotY = startY + idx * (nodeHeight + spacing);
+
+    // Temporary probe marker
+    const probeRect = tableLayer.append("rect")
+      .attr("x", startX)
+      .attr("y", slotY)
+      .attr("width", 120)
+      .attr("height", nodeHeight)
+      .attr("fill", "red")
+      .attr("opacity", 0.5);
+
+    probeRect.transition().duration(400)
+      .style("opacity", 0)
+      .remove()
+      .on("end", () => {
+        i++;
+        stepProbe();
+      });
+  }
+
+  stepProbe();
+}
+
+
+    // Handlers for different events to support button clicks
+    document.addEventListener("DOMContentLoaded", () => {
+
+      // Adjust resource box positioning to resizing of browser window
+      window.addEventListener("resize", () => {
+          createResourceBox(svg, resourceLinks);
+      });
+
+     // Begin of CREATE Handler
+     document.getElementById("createBtn").addEventListener("click", async () => {
+       try {
+         const sizeVal = document.getElementById("sizeValue").value.trim();
+
+         const size = sizeVal ? parseInt(sizeVal) : 10;
+
+         const res = await fetch("/create", {
+           method: "POST",
+           headers: { "Content-Type": "application/json" },
+           body: JSON.stringify({ size})
+         });
+
+         const data = await res.json();
+         drawHashTable(data);
+
+         // Replace input area with key/value fields
+        const inputArea = document.getElementById("input-area");
+        inputArea.innerHTML = `
+          <input type="text" id="inputKey" placeholder="Enter key">
+          <input type="text" id="inputValue" placeholder="Enter value">
+        `;
+
+        showStatus(`Created table with size=${size}`, "green");
+
+      } catch (err) {
+        console.error("Error creating table:", err);
+        showStatus("Error creating table", "red");
+      }
+    }); // End of CREATE Handler
+
+    // Begin of INSERT Handler
+    document.getElementById("insertBtn").addEventListener("click", async () => {
+      const key = document.getElementById("inputKey").value.trim();
+      const val = document.getElementById("inputValue").value.trim();
+      const probe = document.getElementById("probeSelect").value;
+
+      if (!key || !val) {
+        showStatus("Please enter both key and value", "red");
+        return;
+      }
+
+      try {
+        const res = await fetch("/insert", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ key, val, probe })
+        });
+
+        const data = await res.json();
+        console.log("Insert response:", data);
+
+        if (data.success) {
+          // Call animateInsert
+          // Backend should return probe sequence for linear/quadratic probing
+          animateInsert({ key, value: val }, data.probes, data.table);
+
+          // Status showing insertion of key-value plair
+          showStatus(`Inserted key value pair ${key}-${val}`);
+
+        } else {
+          // Status showing unsuccessful insertion
+          showStatus("Insertion failed: table full", "red");
+        }
+     } catch (err) {
+        // Debug message
+        console.error("Error inserting:", err);
+
+        // Status showing an error in insertion
+        showStatus("Error inserting item", "red");
+     }
+   }); // End of INSERT Handler
+
+   // Begin of Delete Handler
+   document.getElementById("deleteBtn").addEventListener("click", async () => {
+     const key = document.getElementById("inputKey").value.trim();
+     const val = document.getElementById("inputValue").value.trim();
+
+     if (!key) {
+       showStatus("Please enter key", "red");
+       return;
+     }
+
+     try {
+       const res = await fetch("/delete", {
+         method: "DELETE",
+         headers: { "Content-Type": "application/json" },
+         body: JSON.stringify({ key, val })
+       });
+
+       const data = await res.json();
+
+       if (data.success) {
+         animateDelete({ key, value: val }, data.probes, data.table);
+
+         showStatus(`Deleted key value pair ${key}-${val}`, "red");
+
+       } else {
+         showStatus("Delete failed: not found", "red");
+       }
+     } catch (err) {
+       console.error("Error deleting:", err);
+       showStatus("Error deleting item", "red");
+     }
+   }); // End of DELETE Handler
+
+   // Begin of FIND Handler
+   document.getElementById("findBtn").addEventListener("click", async () => {
+     const key = document.getElementById("inputKey").value.trim();
+     const val = document.getElementById("inputValue").value.trim();
+
+     if (!key) {
+       showStatus("Please enter key", "red");
+       return;
+     }
+
+     try {
+       const res = await fetch(`/find?key=${key}&val=${val}`);
+       const data = await res.json();
+
+       if (data.success) {
+         animateFind({ key, value: val }, data.probes, data.table, true);
+         showStatus(`Found ${key}:${val} at slot ${data.index}`, "green");
+       } else {
+         animateFind({ key, value: val }, data.probes, data.table, false);
+         showStatus(`Not found ${key}:${val}`, "red");
+       }
+     } catch (err) {
+       console.error("Error finding:", err);
+       showStatus("Error finding item", "red");
+     }
+   }); // End of FIND Handler
+
+  }); //Ends DOM
+
+  </script>
+</body>
+</html>
