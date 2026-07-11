@@ -29,10 +29,12 @@ Furthermore, an introductory programming course is a requirement across discipli
 ### Animation of Data Structures Using Python FLASK and Tkinter
 
 ### [Binary Trees](Topics/Python/BINARY_TREE/)
-### [Binary Search TRees](Topics/Python/BST/)
+### [Binary Search Trees](Topics/Python/BST/)
 ### [AVL Trees](Topics/Python/AVL_TREE/)
-### [](https://vikramshilla.blogspot.com/2021/12/trees.html)
-### [Stacks](https://vikramshilla.blogspot.com/2021/12/the-creation-of-stack-is-simple.html)
+### [Graphs](Topics/Python/GRAPH/)
+### [Queues](Topics/Python/QUEUE)
+### [Stacks](Topics/Python/STACK)
+
 ### [Importance of Stack](https://vikramshilla.blogspot.com/2021/11/importance-of-stacks.html)
 ### [List implementation](https://vikramshilla.blogspot.com/2021/11/implementation-of-list-operations-in-c.html)
 ### [List as ADT](https://vikramshilla.blogspot.com/2021/11/abstract-concept-of-list.html)
