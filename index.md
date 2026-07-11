@@ -32,9 +32,9 @@ Furthermore, an introductory programming course is a requirement across discipli
 ### [Binary Search Trees](Topics/Python/BST/)
 ### [AVL Trees](Topics/Python/AVL_TREE/)
 ### [Graphs](Topics/Python/GRAPHS/)
-### [Graphs](Topics/Python/HASHING/)
-### [Graphs](Topics/Python/HEAPS/)
-### [Graphs](Topics/Python/LINKED_LIST/)
+### [Hashing](Topics/Python/HASHING/)
+### [Heaps](Topics/Python/HEAPS/)
+### [Linked Lists](Topics/Python/LINKED_LIST/)
 ### [Queues](Topics/Python/QUEUE)
 ### [Stacks](Topics/Python/STACK)
 
