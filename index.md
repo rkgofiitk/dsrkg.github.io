@@ -31,17 +31,14 @@ Furthermore, an introductory programming course is a requirement across discipli
 ### [Binary Trees](Topics/Python/BINARY_TREE/)
 ### [Binary Search Trees](Topics/Python/BST/)
 ### [AVL Trees](Topics/Python/AVL_TREE/)
-### [Graphs](Topics/Python/GRAPH/)
+### [Graphs](Topics/Python/GRAPHS/)
+### [Graphs](Topics/Python/HASHING/)
+### [Graphs](Topics/Python/HEAPS/)
+### [Graphs](Topics/Python/LINKED_LIST/)
 ### [Queues](Topics/Python/QUEUE)
 ### [Stacks](Topics/Python/STACK)
 
-### [Importance of Stack](https://vikramshilla.blogspot.com/2021/11/importance-of-stacks.html)
-### [List implementation](https://vikramshilla.blogspot.com/2021/11/implementation-of-list-operations-in-c.html)
-### [List as ADT](https://vikramshilla.blogspot.com/2021/11/abstract-concept-of-list.html)
-### [Data Types and ADTs](https://vikramshilla.blogspot.com/2021/11/data-types-and-adts.html)
-### [Meaning of Structures](https://vikramshilla.blogspot.com/2021/11/meaning-of-structure.html)
-### [Data Structures](https://vikramshilla.blogspot.com/2021/11/data-structures.html)
-### [Why Coding is Important](https://vikramshilla.blogspot.com/2021/11/why-coding-and-learning-data-structure.html)
+
 
 ```markdown
 
