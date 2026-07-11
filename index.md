@@ -41,7 +41,7 @@ Furthermore, an introductory programming course is a requirement across discipli
 
 ### Animation of Data Structures Using Python Tkinter
 
-### [Linked Lists](Topics/TKINTER/LINKED_LIST/)
+### [Linked Lists](Topics/TkINTER/LINKED_LIST/)
 ```markdown
 
 
