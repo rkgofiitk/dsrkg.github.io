@@ -26,12 +26,12 @@ I believe data structure is taught to all computer science undergraduate student
 
 Furthermore, an introductory programming course is a requirement across disciplines. Apart from Computer Science and Engineering students, it includes other streams such as Electrical, Mechanical, Chemical, Material Science and Engineering, Maths, Physics, Chemistry, and Biological Sciences. So the course is not designed exclusively for programming, as CSE students are expected to be in the future. Therefore, without programming practice in the data structures course, I believe CSE students tend to develop code phobia. The theory is required, but a right balance is needed.
 
-### Blog Links
+### Animation of Data Structures Using Python FLASK and Tkinter
 
-### [Trees](Topics/Python/BINARY_TREE/)
-### [Circular queue implementation](https://vikramshilla.blogspot.com/2021/12/circular-queue-implementation-in-c.html)
-### [Qeueus](https://vikramshilla.blogspot.com/2021/12/queues.html)
-### [Implementation of Stacks](https://vikramshilla.blogspot.com/2021/12/trees.html)
+### [Binary Trees](Topics/Python/BINARY_TREE/)
+### [Binary Trees](Topics/Python/AVL_TREE/)
+### [Qeueus & Stack](Topics/Python/STACK/)
+### [](https://vikramshilla.blogspot.com/2021/12/trees.html)
 ### [Stacks](https://vikramshilla.blogspot.com/2021/12/the-creation-of-stack-is-simple.html)
 ### [Importance of Stack](https://vikramshilla.blogspot.com/2021/11/importance-of-stacks.html)
 ### [List implementation](https://vikramshilla.blogspot.com/2021/11/implementation-of-list-operations-in-c.html)
