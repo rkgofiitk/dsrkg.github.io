@@ -28,7 +28,7 @@ Furthermore, an introductory programming course is a requirement across discipli
 
 ### Blog Links
 
-### [Trees](https://vikramshilla.blogspot.com/2021/12/trees.html)
+### [Trees](Topics/Python/TREES/readme.md)
 ### [Circular queue implementation](https://vikramshilla.blogspot.com/2021/12/circular-queue-implementation-in-c.html)
 ### [Qeueus](https://vikramshilla.blogspot.com/2021/12/queues.html)
 ### [Implementation of Stacks](https://vikramshilla.blogspot.com/2021/12/trees.html)
