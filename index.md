@@ -1,9 +1,3 @@
----
-output:
-  html_document:
-    css: myStyle.css
----
-
 ## Learning Data Structures and Programming
 
 Programming and data structure are two important elements in building a career as a software techie. India boasts a number of software companies, including TCS, Infosys, HCL Technologies, Mindtree, Tech Mahindra, L&T Infotech, ITC Infotech, and First Source. I understand all of these companies have in-house training units. They induct graduate trainees and put them through rigorous coding training before induction. Many of the trainees are unable to cope with the rigor and leave in the middle.
