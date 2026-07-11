@@ -26,7 +26,7 @@ I believe data structure is taught to all computer science undergraduate student
 
 Furthermore, an introductory programming course is a requirement across disciplines. Apart from Computer Science and Engineering students, it includes other streams such as Electrical, Mechanical, Chemical, Material Science and Engineering, Maths, Physics, Chemistry, and Biological Sciences. So the course is not designed exclusively for programming, as CSE students are expected to be in the future. Therefore, without programming practice in the data structures course, I believe CSE students tend to develop code phobia. The theory is required, but a right balance is needed.
 
-### Animation of Data Structures Using Python FLASK and Tkinter
+### Animation of Data Structures Using Python FLASK 
 
 ### [Binary Trees](Topics/Python/BINARY_TREE/)
 ### [Binary Search Trees](Topics/Python/BST/)
@@ -39,8 +39,9 @@ Furthermore, an introductory programming course is a requirement across discipli
 ### [Stacks](Topics/Python/STACK)
 ### [Sorting](Topics/Python/Sorting)
 
+### Animation of Data Structures Using Python Tkinter
 
-
+### [Linked Lists](Topics/TKINTER/LINKED_LIST/)
 ```markdown
 
 
