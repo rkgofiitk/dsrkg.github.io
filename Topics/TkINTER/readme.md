@@ -43,3 +43,5 @@ pip3 install Pillow # installs Image package
 </code>
 
 The idea behind installing a Micro PDF viewer is to provide a brief explanation of the PDF's data structure before the user begins exploring the animation. This way we can let the user make the connection between the animation and the organization of a specific data structure.
+
+The code is organized into directories, one for the animation of a separate data structure. Most programs have three basic files: one defines the class for the data representation and implementation of the allowable operation, the second for the animation of the operations, and the third for 
