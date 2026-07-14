@@ -21,7 +21,7 @@ from PIL import Image, ImageTk
 `sudo apt install python3-pip`
 <br>
 <code>Pip</code> depends on the `dnf` package, which also needs to be installed using the apt installer. The sequence of installation steps leading up to `venv` activation is as follows.
-  
+<br>
 - <code>apt install python3-tk</code>
 - `sudo apt install dnf`
 - `sudo apt install python3-pip`
@@ -30,7 +30,9 @@ from PIL import Image, ImageTk
 
 After installing the virtual environment, link it with the Python project directory using the command:
 <br>
+<br>
 <code>python3 -m venv /home/path-to_python-project/</code>
+<br>
 <br>
 Then the environment can be activated from the project directory by <code>source bin/activate</code>. The pip-installer can then install all other Python packages from the safe environment. The typical installation steps are:
 <code>
