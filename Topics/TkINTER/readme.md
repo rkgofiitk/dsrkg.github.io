@@ -35,6 +35,7 @@ After installing the virtual environment, link it with the Python project direct
 <br>
 <br>
 Then the environment can be activated from the project directory by <code>source bin/activate</code>. The pip-installer can then install all other Python packages from the safe environment. The typical installation steps are:
+<br>
 <code>
 pip install fitz # module for importing PyMuPDF
 pip install PyMuPDF # installs PDF viewer
