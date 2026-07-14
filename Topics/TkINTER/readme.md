@@ -27,8 +27,14 @@ It depends on the `dnf` package, which also needs to be installed using the apt 
 - `sudo apt install python3-pip`
 - `sudo apt install python3-venv`
 
+
 Once the environment is installed, link it with the Python project directory using the command:
 <br>
 <code>python3 -m venv /home/path-to_python-project/</code>
 <br>
-Then the environment can be activated from the project directory by <code>source bin/activate</code>. Only other package outside pip installation ambit is 'PIL`. It is a part of a package called <code>pillow</code>.
+Then the environment can be activated from the project directory by <code>source bin/activate</code>. The pip-installer can then install all other Python packages from the safe environment. The typical installation steps are:
+<code>
+pip install fitz
+pip install PyMuPDF # installs PDF viewer
+pip3 install Pillow # installs Image package
+</code>
