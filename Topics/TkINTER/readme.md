@@ -14,6 +14,7 @@ import fitz
 import time
 from PIL import Image, ImageTk
 </code>
+<br>
 
 <code>TkInter</code> package is dependent on <code>tk</code>. First, we need to install it using <code>apt install python3-tk</code>. To install a Python module inside the virtual environment code>venv</code>, we <code>pip</code> installer. It is installed using the following command 
 <br>
