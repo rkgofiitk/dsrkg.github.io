@@ -36,3 +36,5 @@ pip install fitz # module for importing PyMuPDF
 pip install PyMuPDF # installs PDF viewer
 pip3 install Pillow # installs Image package
 </code>
+
+The idea behind installing a Micro PDF viewer is to provide a brief explanation of the PDF's data structure before the user begins exploring the animation. This way we can let the user make the connection between the animation and the organization of a specific data structure.
