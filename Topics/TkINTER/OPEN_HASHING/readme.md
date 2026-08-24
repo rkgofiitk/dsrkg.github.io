@@ -6,3 +6,5 @@ Open address hashing creates a table with specified capacity. The elements are i
 - Random resolution
 
 Lineare resolution probes the adjacent cells by using the formula $$(h(x) + 1) % table_size$$. So, it probes the table cell in the sequence $$h(x), h(x)+1, h(x)+2, \ldots, h(x)+i$$ in cyclic order terminating at intial cell from where the probe began. Quadratic probe generates the probes in sequence $$h(x), h(x)+1, h(x)+2, h(x)+4, \ldots, h(x)+2^i$$ 
+
+The directory contains three file including the current file. However, it requires supporting files for PDF viewer to function. The user must provide the supporting file to execute the program.
