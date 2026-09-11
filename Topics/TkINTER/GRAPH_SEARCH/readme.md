@@ -1,4 +1,4 @@
-## Graph Search
+## Animation of Graph Search & Dijkstra's Algorithm
 
 Graphs are structures that represent relationships among different units of information/data called nodes or vertices. A unit of information, along with its data, can be operated in a similar fashion. We have integrated three algorithms:
 - Depth-First Search
