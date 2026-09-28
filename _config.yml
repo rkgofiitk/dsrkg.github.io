@@ -3,3 +3,13 @@ description: Cayman is a clean, responsive theme for GitHub Pages.
 show_downloads: true
 google_analytics:
 theme: jekyll-theme-cayman
+
+# Math rendering support
+markdown: kramdown
+kramdown:
+  math_engine: mathjax
+  parse_block_html: true
+
+# MathJax configuration
+mathjax:
+  source: https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
