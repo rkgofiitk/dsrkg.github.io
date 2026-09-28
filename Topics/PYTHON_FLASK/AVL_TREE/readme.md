@@ -37,8 +37,10 @@ Thus, $bf(b) = 0$, in other words, the single left rotation restores balance pro
 
 In both Config I, we need just one rotation involving three nodes: $a$, $b$, and the root of $ b$'s right subtree. The tri-node structure for Config I is referred to as a Zig-Zig pattern, while that for Config II is a Zag-Zag pattern.
 
-The Config I in the figure below represents a tri-node structure $a-b-c$, which requires double rotation on a Zig-Zag configuration. The left rotation turns the tri-node structure into a Zig-Zig configuration. Similarly, the Config II requires a double rotation of the Zag-Zig pattern involving the tri-node structure. 
+The Config I in the figure below represents a tri-node structure $a-b-c$, which requires double rotation on a Zig-Zag configuration. Config II in the figure represents Zag-Zig pattern for tri-node structure $a-b-c$.
 
  | Config I | Config II|
   |:----------:|:----------:|
  | <img src="images/avlLRrotation.png" width="80%" alt-text="Single left rotation"> | <img src="images/avlRLrotation.png" width="80%" alt-text="Single right rotation"> |
+
+A left rotation on $b$ in Config I turns the tri-node into a Zig-Zig configuration. Similarly, the Config II requires a double rotation of the Zag-Zig pattern. It also requires a double rotation: first left, then right. The first rotation turns $a-b-c$ to a Zag-Zag pattern requiring a single right rotation. 
