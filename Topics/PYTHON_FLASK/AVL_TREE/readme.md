@@ -11,7 +11,7 @@ A Double Rotation is a mix of two single rotation types. The combination could b
 <figure align="center">
   <img src="images/avlLLrotation.png" width="40%" alt-text="Single left rotation" title="Config I">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <figcaption>Config I</figcaption>
-</figure>figure>
+</figure><figure>
   <img src="images/avlRRrotation.png" width="40%" alt-text="Single right rotation" title="Config II">
 </figure>
 
