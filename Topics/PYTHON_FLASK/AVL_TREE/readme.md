@@ -11,7 +11,8 @@ A Double Rotation is a mix of two single rotation types. The combination could b
 <figure align="center">
   <img src="images/avlLLrotation.png" width="40%" alt-text="Single left rotation" title="Config I">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <img src="images/avlRRrotation.png" width="40%" alt-text="Single right rotation" title="Config II">
-   <figcaption>Config I&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</figcaption>
+ 
+  <figcaption>Config I&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</figcaption>
 </figure>
 
 Before going further, we define the balance factor (bf) of a node in a binary search tree (BST):
