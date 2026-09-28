@@ -1,4 +1,4 @@
-{% include head-custom.html %}
+{% include Topics/PYTHON_FLASK/AVL_TREE/head-custom.html %}
 
 ## AVL Tree Animation.
 
