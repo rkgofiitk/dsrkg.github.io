@@ -8,10 +8,12 @@ The Animation folder contains three files for animating AVL tree operations. Bef
 - Double rotation
 
 A Double Rotation is a mix of two single rotation types. The combination could be LR, RR, LL, or RL. Sometimes a right rotation is also called a clockwise rotation, while a left rotation is an anticlockwise rotation.  A single rotation involves changing three pointers, as shown in the picture below. 
-<p align="center">
+<figure align="center">
   <img src="images/avlLLrotation.png" width="40%" alt-text="Single left rotation" title="Config I">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <figcaption>Config I</figcaption>
+</figure>figure>
   <img src="images/avlRRrotation.png" width="40%" alt-text="Single right rotation" title="Config II">
-</p>
+</figure>
 
 Before going further, we define the balance factor (bf) of a node in a binary search tree (BST):
 - It is the difference between the heights of a node's left and right subtrees.
