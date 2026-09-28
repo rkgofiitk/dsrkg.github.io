@@ -10,7 +10,7 @@ The Animation folder contains three files for animating AVL tree operations. Bef
 A Double Rotation is a mix of two single rotation types. The combination could be LR, RR, LL, or RL. Sometimes a right rotation is also called a clockwise rotation, while a left rotation is an anticlockwise rotation.  A single rotation involves changing three pointers, as shown in the picture below. 
 
  | Config I | Config II|
-  |:----------|----------:|
+  |:----------:|:----------:|
  | <img src="images/avlLLrotation.png" width="80%" alt-text="Single left rotation"> | <img src="images/avlRRrotation.png" width="80%" alt-text="Single right rotation"> |
 
 
