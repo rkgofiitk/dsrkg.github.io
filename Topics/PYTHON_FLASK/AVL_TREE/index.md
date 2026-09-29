@@ -4,8 +4,7 @@ layout: default
 ---
 {% include Topics/PYTHON_FLASK/AVL_TREE/head-custom.html %}
 ---
-title: AVL Tree Animation
----
+
 
 ## AVL Tree Animation.
 
