@@ -34,7 +34,7 @@ Only the last level will not be fully occupied. However, for worst-case time com
 - At level 0, there is just $2^0$ node,
 - At level 1, there can be at most $2^1$ nodes,
 - At level 2, there can be at most $2^2$ nodes, and so on
-- At level $\lceil\log n\receil$, there can be at most $2^{\log n-2}$ nodes.
+- At level $\lceil\log n\rceil$, there can be at most $2^{\log n-2}$ nodes.
 
   
 
