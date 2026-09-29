@@ -1,4 +1,11 @@
-## Readme for Graph Algorithms 
+---
+title: Graph Algorithms
+layout: default
+---
+{% include head-custom.html %}
+
+
+## Graph Algorithms 
 
 The current folder contains one folder that contains all files.The folder contains four files:
 - <tt>graph_core.py</tt>: Python code for graph operations.
