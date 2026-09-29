@@ -1,5 +1,5 @@
 ---
-title: Animation Heap
+title: Animation of Heap
 layout: default
 ---
 {% include head-custom.html %}
