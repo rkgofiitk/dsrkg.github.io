@@ -1,7 +1,7 @@
---
-title: BST operations
+---
+title: BST Operation
 layout: default
---
-{% include header-custom.html %}
+---
+{% include head-custom.html %}
 
-## BST Operations 
+## BST Operation
