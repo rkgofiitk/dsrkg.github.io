@@ -1,7 +1,8 @@
-{% include Topics/PYTHON_FLASK/AVL_TREE/head-custom.html %}
 ---
 title: AVL Tree Animation
 ---
+{% include Topics/PYTHON_FLASK/AVL_TREE/head-custom.html %}
+
 
 ## AVL Tree Animation.
 
