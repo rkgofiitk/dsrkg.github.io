@@ -2,7 +2,7 @@
 title: AVL Tree Animation
 layout: default
 ---
-{% include _includes/head-custom.html %}
+{% include head-custom.html %}
 
 ## AVL Tree Animation.
 
