@@ -1,7 +1,7 @@
---
-title: Animation of Heap
+---
+title: AVL Tree Animation
 layout: default
---
+---
 {% include head-custom.html %}
 
 
