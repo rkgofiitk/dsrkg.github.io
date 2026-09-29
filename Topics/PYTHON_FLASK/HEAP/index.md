@@ -15,7 +15,7 @@ The picture below shows an example of a max heap and a min heap.
 
 | Max Heap Example | Min Heap Example|
 |:----- | :-----|
-| <img src="images/max_heap.png"> | <img src="images/min_heap.png:>|
+| <img src="images/max_heap.png"> | <img src="images/min_heap.png">|
 
 A heap allows two mutating operations:
 - Insert: Allows insertion of a new element and restores the heap property.
