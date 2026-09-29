@@ -26,15 +26,15 @@ Creating and maintaining a heap poses two basic challenges:
 - Building a heap from a given set of elements.
 - Restoring the heap property after an insertion or a deletion.
   
-A heap is maintained as a complete binary tree. In a complete binary tree, nodes at all levels of the tree are fully populated except for the last and the level one up. As shown in the examples above, nodes at levels above $i-1$ are fully populated (each with two children). To build a heap, we start with an empty node and insert the elements from a given set one by one. The next element is inserted into the leftmost vacant position on the deepest level, then the element is compared and swapped along the tree path up towards the root. The new element settles in the position where it can no longer move up the tree path. Since we are building the tree level by level, the total number of compare-and-swap operations can be obtained by knowing:
+A heap is maintained as a complete binary tree. In a complete binary tree, nodes at all levels of the tree are fully populated except for the last and the level one up. As shown in the examples above, nodes at levels above $i-1$ are fully populated (each with two children). To build a heap, we start with an empty node and insert the elements from a given set one by one. The next element is inserted into the leftmost vacant position on the deepest level, and then it is compared and swapped along the path up towards the root. The new element settles in the position where it can no longer move up the tree path. Since we are building the tree level by level, the total number of compare-and-swap operations can be obtained by knowing:
 - Find the number of nodes at each level
 - Find the number of levels generated for consuming all elements in the given set.
 
 Only the last level will not be fully occupied. However, for worst-case time complexity, we can assume that the last level is also fully occupied. Assuming $n$ as the cardinality of the initial set of elements, we progress as follows:
-- At level 0 there is just $2^0$ node,
-- At level 1 there are $2^1$ nodes,
-- At level 2 there are $2^2$ nodes, and so on
-- At level $\log n-1$ there are $2^{\log n-2}$ nodes.
+- At level 0, there is just $2^0$ node,
+- At level 1, there can be at most $2^1$ nodes,
+- At level 2, there can be at most $2^2$ nodes, and so on
+- At level $\lceil\log n\receil$, there can be at most $2^{\log n-2}$ nodes.
 
   
 
