@@ -26,27 +26,22 @@ Creating and maintaining a heap poses two basic challenges:
 - Building a heap from a given set of elements.
 - Restoring the heap property after an insertion or a deletion.
   
-A heap is maintained as a complete binary tree. In a complete binary tree, nodes at all levels of the tree are fully populated except for the last and the level one up. As shown in the examples above, nodes at levels above $i-1$ are fully populated (each with two children). To build a heap, we start with an empty node and insert the elements from a given set one by one. The next element is inserted into the leftmost vacant position on the deepest level, then compared and swapped along the path up towards the root. The new element settles in the position where it can no longer move up the tree path. While moving up the tree, the new node can be involved in at most one compare-and-swap (CAS) operation. To understand why?,  consider three elements $a$, $b$, and $c$:
-- $a$ is parent, $b$ is an existing child of $a$
-- $c$ is the new node being inserted.
+A heap is maintained as a complete binary tree. In a complete binary tree, nodes at all levels of the tree are fully populated except for the last and the level one up. As shown in the examples above, nodes at levels above $i-1$ are fully populated (each with two children). The technique for constructing the heap will differ depending on whether we build it from the beginning or the end of the array. 
 
-Since $a > b$, if $c > a$, then by transitivity $c > b$. Therefore, if $c$ is moved up until it cannot move any more, then the heap property is preserved. 
+- If we start at the beginning of the array, then we compare the next two elements by adding from the top. Continue the addition of the next 4 elements again from the top, and in general, the last $n/2^i$ elements starting at the top at step $i$. Essentially, it builds the heap level by level from the top down.
+- If we start from the end, then $n/2$ elements from the end are already heaps of size 1 each at the bottom-most level. Next, consider $n/2$ elements by merging each element with 2 adjacent heaps of the bottom-most level. Continue building the heap bottom-up, merging pairs of adjacent heaps with the next incoming element from the remaining unprocessed array. 
 
-Since we are building the tree level by level, the total number of compare-and-swap operations can be obtained by knowing:
-- Find the number of nodes at each level
-- Find the number of levels generated for consuming all elements in the given set.
+The question is which of the two techniques above for building a heap is more efficient?
 
-Only the last level will not be fully occupied. However, for worst-case time complexity, we can assume that the last level is also fully occupied. Assuming $n$ as the cardinality of the initial set of elements. We consider the number of nodes at height $h$ in the tree representing a heap of $n$ nodes.
+The answer to the question is, surprisingly, the bottom-up technique. Let us reiterate how the bottom-up technique progresses:
+- First building $n/2$ heaps of size 1, it does not require any compare-and-swap (CAS).
+- Next, merging 2 adjacent heaps of size 1 from $n/2$ heaps into $n/4$ heaps of size 3 each, adding a new element to each, which requires $n/2$ CAS operations.
+- Repeat the process of merging heaps by adding new elements from the unprocessed portion of the array until we finish with a single heap of size $n$.
 
-- At  $h = 0$, there are atmost  $\lceil n/2\rceil$ nodes.
-- At $h = 1$, there can be at most $\lceil n/2^2\rceil$ nodes,
-- In general, at height $h$ at most $\lceil n/2^{h+1}\rceil$, for $0 \le h\le \log n - 1$.
+Except for the starting step, each merging step requires twice as many CAS operations as the immediately preceding step. So, the cost of building a heap using bottom-up construction is given by the following expression:
 
-In the worst case, h$ compare-and-swap operations are needed for inserting a node at height $h$ of a heap. Therefore, the total cost of building a heap of $n$ nodes is:
+$0 * (n/2) + 1 * (n/4) + 2 * (n/8) + \ldots + (\log n * 1) = \sum_{i=1}^{h} i * \frac{n}{2^{i+1}} = n\sum_{i=1}^{h} \frac{i}{2^{i+1}}$
 
-$\sum_h O(h) \left\lceil\frac{n}{2^{h+1}}\right\rceil = O\left(n\sum_{h=0}^{\infty} \frac{h}{2^h}\right) = O(n)$, 
-
-Since $\sum_{h=0}^{\infty}\frac{h}{2^h}$ converges to 2.
 
   
 
