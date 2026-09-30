@@ -44,7 +44,7 @@ Only the last level will not be fully occupied. However, for worst-case time com
 
 In the worst case, h$ compare-and-swap operations are needed for inserting a node at height $h$ of a heap. Therefore, the total cost of building a heap of $n$ nodes is:
 
-$\sum_h O(h) \lceil\frac{n}{2^h}\rceil < O(n\sum_{h=0}^{\infty} \frac{h}{2^h}) = O(n)$, since $\sum_{h=0}^{\infty}\frac{h}{2^h}$ converges to 2.
+$\sum_h O(h) \lceil\frac{n}{2^h}\rceil < O\left(n\sum_{h=0}^{\infty} \frac{h}{2^h}\right) = O(n)$, since $\sum_{h=0}^{\infty}\frac{h}{2^h}$ converges to 2.
 
   
 
