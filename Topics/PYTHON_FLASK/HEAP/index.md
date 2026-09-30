@@ -44,7 +44,7 @@ Only the last level will not be fully occupied. However, for worst-case time com
 
 At most 2 compare-and-swap operations may be needed in the worst case when inserting a node. So, while building a heap at height $i$, the worst-case total cost is $2.2^i$ compare-and-swap operations. Summing it over the insertion of all $n$ nodes, the total worst-case cost is
 
-$2 + 2^2 + \ldots + 2.2^{\log n - 1} = 2\frac{2^{\log n} - 1} -1}{2-1} \le 2^{\log n} = n$
+$2 + 2^2 + \ldots + 2.2^{\log n - 1} = 2\frac{2^{\log n} - 1}{2-1} \le 2^{\log n} = n$
 
   
 
