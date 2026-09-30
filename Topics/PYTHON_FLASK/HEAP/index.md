@@ -26,19 +26,20 @@ Creating and maintaining a heap poses two basic challenges:
 - Building a heap from a given set of elements.
 - Restoring the heap property after an insertion or a deletion.
   
-A heap is maintained as a complete binary tree. In a complete binary tree, nodes at all levels of the tree are fully populated except for the last and the level one up. As shown in the examples above, nodes at levels above $i-1$ are fully populated (each with two children). To build a heap, we start with an empty node and insert the elements from a given set one by one. The next element is inserted into the leftmost vacant position on the deepest level, then compared and swapped along the path up towards the root. The new element settles in the position where it can no longer move up the tree path. While moving up the tree, the new node can be involved in 2 compare-swap operations. To understand why?,  consider three elements $a$, $b$, and $c$:
+A heap is maintained as a complete binary tree. In a complete binary tree, nodes at all levels of the tree are fully populated except for the last and the level one up. As shown in the examples above, nodes at levels above $i-1$ are fully populated (each with two children). To build a heap, we start with an empty node and insert the elements from a given set one by one. The next element is inserted into the leftmost vacant position on the deepest level, then compared and swapped along the path up towards the root. The new element settles in the position where it can no longer move up the tree path. While moving up the tree, the new node can be involved in at most one compare-and-swap (CAS) operation. To understand why?,  consider three elements $a$, $b$, and $c$:
 - $a$ is parent, $b$ is an existing child of $a$
 - $c$ is the new node being inserted.
 
-Let the relative order of elements be: $c > a$ but $c < b$. In this case, when we move $c$ up and push down $a$ to $c$'s previous position, $c$ also becomes the parent of $b$, replacing $a$. However, as $c < b$, the heap property is not valid at $c$ unless we move $b$ to $c$'s current position. It is possible that $c$ may have to be pushed down the path to a leaf after being pushed to $b$'s previous position. However, the movement of $c$ is limited by the depth of the tree from $b$'s previous position. It means $c$'s movement to its correct position in the heap is limited by the height of the tree representing the heap.  
+Since $a > b$, if $c > a$, then by transitivity $c > b$. Therefore, if $c$ is moved up until it cannot move any more, then the heap property is preserved. 
 
 Since we are building the tree level by level, the total number of compare-and-swap operations can be obtained by knowing:
 - Find the number of nodes at each level
 - Find the number of levels generated for consuming all elements in the given set.
 
-Only the last level will not be fully occupied. However, for worst-case time complexity, we can assume that the last level is also fully occupied. Assuming $n$ as the cardinality of the initial set of elements, we progress as follows:
-- At level 0, there is just $2^0$ node,
-- At level 1, there can be at most $2^1$ nodes,
+Only the last level will not be fully occupied. However, for worst-case time complexity, we can assume that the last level is also fully occupied. Assuming $n$ as the cardinality of the initial set of elements. We consider the number of nodes at height $h$ in the tree representing a heap of $n$ nodes.
+
+- At  $h = 0$, there are atmost  $n/2$ nodes.
+- At $h = 1$, there can be at most $2^1$ nodes,
 - At level 2, there can be at most $2^2$ nodes, and so on
 - In general, at level $i$ at most $2^{i}$, for $0 \le i\le \log n - 1$.
 
