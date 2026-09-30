@@ -40,7 +40,13 @@ The answer to the question is, surprisingly, the bottom-up technique. Let us rei
 
 Except for the starting step, each merging step requires twice as many CAS operations as the immediately preceding step. So, the cost of building a heap using bottom-up construction is given by the following expression:
 
-$0 * (n/2) + 1 * (n/4) + 2 * (n/8) + \ldots + (\log n * 1) = \sum_{1}^{h} i * \frac{n}{2^{i+1}} = n\sum_{1}^{h} \frac{i}{2^{i+1}}$
+$0 * (n/2) + 1 * (n/4) + 2 * (n/8) + \ldots + (\log n * 1) = \sum_{1}^{h} i * \frac{n}{2^{i+1}} = \sum_{1}^{h} \frac{in}{2^{i+1}}$
+
+Let us try to obtain an upper bound for the above expression. 
+
+$\sum_{1}{h} \frac{in}{2^{i+1}} = \frac{n}{4}\sum_{1}{h} \frac{i}{2^{i-1}} < \frac{n}{4}\sum_0^\infty ix^i$,
+
+where $x = 1/2$.
 
 
   
