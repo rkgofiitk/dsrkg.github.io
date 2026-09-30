@@ -39,13 +39,12 @@ Since we are building the tree level by level, the total number of compare-and-s
 Only the last level will not be fully occupied. However, for worst-case time complexity, we can assume that the last level is also fully occupied. Assuming $n$ as the cardinality of the initial set of elements. We consider the number of nodes at height $h$ in the tree representing a heap of $n$ nodes.
 
 - At  $h = 0$, there are atmost  $n/2$ nodes.
-- At $h = 1$, there can be at most $2^1$ nodes,
-- At level 2, there can be at most $2^2$ nodes, and so on
-- In general, at level $i$ at most $2^{i}$, for $0 \le i\le \log n - 1$.
+- At $h = 1$, there can be at most $n/2^2$ nodes,
+- In general, at level $h$ at most $n/2^{h}$, for $0 \le h\le \log n - 1$.
 
-At most 2 compare-and-swap operations may be needed in the worst case when inserting a node. So, while building a heap at height $i$, the worst-case total cost is $2.2^i$ compare-and-swap operations. Summing it over the insertion of all $n$ nodes, the total worst-case cost is
+In the worst case, h$ compare-and-swap operations are needed for inserting a node at height $h$ of a heap. Therefore, the total cost of building a heap of $n$ nodes is:
 
-$2 + 2^2 + \ldots + 2.2^{\log n - 1} = 2\left\(\frac{2^{\log n} - 1}{2-1}\right\) \le 2^{\log n} = n$
+$\sum_h O(h) $\lceil\frac{n}{2^h}\rceil < O(n\sum_{h=0}^{\infty} \frac{h}{2^h}) = O(n)$, since $\sum_{h=0}^{\infty}\frac{h}{2^h}$ converges to 2.
 
   
 
