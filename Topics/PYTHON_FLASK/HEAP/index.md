@@ -38,9 +38,9 @@ Since we are building the tree level by level, the total number of compare-and-s
 
 Only the last level will not be fully occupied. However, for worst-case time complexity, we can assume that the last level is also fully occupied. Assuming $n$ as the cardinality of the initial set of elements. We consider the number of nodes at height $h$ in the tree representing a heap of $n$ nodes.
 
-- At  $h = 0$, there are atmost  $n/2$ nodes.
-- At $h = 1$, there can be at most $n/2^2$ nodes,
-- In general, at level $h$ at most $n/2^{h}$, for $0 \le h\le \log n - 1$.
+- At  $h = 0$, there are atmost  $\lceil n/2\rceil$ nodes.
+- At $h = 1$, there can be at most $\lceil n/2^2\rceil$ nodes,
+- In general, at height $h$ at most $\lceil n/2^{h+1}\rceil$, for $0 \le h\le \log n - 1$.
 
 In the worst case, h$ compare-and-swap operations are needed for inserting a node at height $h$ of a heap. Therefore, the total cost of building a heap of $n$ nodes is:
 
