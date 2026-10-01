@@ -46,7 +46,11 @@ Let us try to obtain an upper bound for the above expression.
 
 $\sum_{1}{h} \frac{in}{2^{i+1}} = \frac{n}{4}\sum_{1}^{h} \frac{i}{2^{i-1}} < \frac{n}{4}\sum_0^\infty ix^{i-1}$,
 
-where $x = 1/2$.
+where $x = 1/2$. We rewrite the RHS of the above expression as:
+
+$\frac{n}{4} \frac{d{\left[\sum_0^\infty x^i}\right]}{dx}$
+
+
 
 
   
