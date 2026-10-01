@@ -16,7 +16,7 @@ A linked list allows insert, delete, and search operations. But the worst-case c
 - Element to be inserted, say $E_{new}$
 - Element, say $E_{aft}$. specifying the position in the list after which the new element should be inserted.
 
-The following possibilities exist, depending on $E_a$ and $E_{new}$.
+The following possibilities exist, depending on $E_{aft}$ and $E_{new}$.
 - If $E_{aft}$ is the last element, then the new element $E_{new}$ must be appended.
 - If $E_{aft}$ does not exist in the list, then the insertion should generate an error.
 - If $E_{aft}$ exists in the list between the 1st and the element before the last, then locate $E_{aft}$ and insert $E_{new}$ as the next element.
