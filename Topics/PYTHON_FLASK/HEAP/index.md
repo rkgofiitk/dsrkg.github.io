@@ -31,9 +31,21 @@ A heap is maintained as a complete binary tree. In a complete binary tree, nodes
 - If we start at the beginning of the array, then we compare the next two elements by adding from the top. Continue the addition of the next 4 elements again from the top, and in general, the last $n/2^i$ elements starting at the top at step $i$. Essentially, it builds the heap level by level from the top down.
 - If we start from the end, then $n/2$ elements from the end are already heaps of size 1 each at the bottom-most level. Next, consider $n/2$ elements by merging each element with 2 adjacent heaps of the bottom-most level. Continue building the heap bottom-up, merging pairs of adjacent heaps with the next incoming element from the remaining unprocessed array. 
 
-The question is which of the two techniques above for building a heap is more efficient?
+The question is which of the two techniques above for building a heap is more efficient? To answer the question, we will work out the cost of constructing a heap using the first approach in detail. Though the primary operation is shiftdown, the approach is a bit non-intuitive, as it starts with $n/2$ heaps of size 1 each and keeps reducing the number of heaps by half each time until a single heap of size $n$ remains. The second approach is more intuitive for readers, as it begins by inserting $n$ elements into an empty heap one by one. 
 
-The answer to the question is, surprisingly, the bottom-up technique. Let us reiterate how the bottom-up technique progresses:
+Let us start with a cost analysis of the second approach first. To give a perspective of computation, we may consider the fact that
+- Only 1 element at height 0
+- 2 at height 1
+- 4 at height 2, and so on
+- $n/2$ at height $h$
+
+So the cost is given by the expression below:
+
+$0 * 1 + 1 * 1 + 2 * 4 + h * (n/2)$
+
+The last term dominates the cost, which is $h * n/2$. Since $h = \log n$, the cost of the second approach is $O(n\log n)$
+
+Surprisingly, the bottom-up technique wins the contest. Let us reiterate how the bottom-up technique progresses:
 - First building $n/2$ heaps of size 1, it does not require any compare-and-swap (CAS).
 - Next, merging 2 adjacent heaps of size 1 from $n/2$ heaps into $n/4$ heaps of size 3 each, adding a new element to each, which requires $n/2$ CAS operations.
 - Repeat the process of merging heaps by adding new elements from the unprocessed portion of the array until we finish with a single heap of size $n$.
@@ -49,6 +61,8 @@ $\sum_{1}{h} \frac{in}{2^{i+1}} = \frac{n}{4}\sum_{1}^{h} \frac{i}{2^{i-1}} < \f
 where $x = 1/2$. We rewrite the RHS of the above expression as:
 
  $\frac{n}{4}\frac{1}{(1-x)^2} = \frac{n}{4} * \frac{1}{1/4} = n$
+
+
 
 
 
