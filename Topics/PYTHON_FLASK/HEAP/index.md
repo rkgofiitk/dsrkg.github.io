@@ -60,7 +60,10 @@ $\sum_{1}{h} \frac{in}{2^{i+1}} = \frac{n}{4}\sum_{1}^{h} \frac{i}{2^{i-1}} < \f
 
 where $x = 1/2$. We rewrite the RHS of the above expression as:
 
- $\frac{n}{4}\frac{1}{(1-x)^2} = \frac{n}{4} * \frac{1}{1/4} = n$
+ $\frac{n}{4}\frac{1}{(1-x)^2} = \frac{n}{4} * \frac{1}{1/4} = n$.
+
+Having understood the construction costs, let us take up the operation on Heaps.
+
 
 
 
