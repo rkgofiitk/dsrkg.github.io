@@ -35,7 +35,7 @@ Thus, a traversal:
 Depending on the instance of the visit during traversal, we distinguish three traversal mechanisms.
 - <b>Preorder</b>: lists the nodes in the order they are visited for the first time: 1, 2, 3, 5, 8, 9, 6, 10.
 - <b>Inorder</b>: lists the nodes in the order they are visited for the second time: 2, 1, 8, 5, 9, 3, 6, 10
-- <b>Postorder</b>: lists the nodes in the order they are visited for the last time:
+- <b>Postorder</b>: lists the nodes in the order they are visited for the last time: 2, 8, 9, 5, 
 
 An alternative way to define traversals is to do so recursively, using a tree's hierarchical relationship with its subtrees. Suppose $r$ denotes the root (of a subtree), $L$, and $R$ its left and right subtrees, respectively. Then the order of visiting the nodes in different traversals is specified recursively as follows:
 - <b>Preorder</b>: $r\ L\ R$
