@@ -25,9 +25,9 @@ Depending on the instance of the visit during traversal, we distinguish three tr
 - <b>Inorder</b>: lists the nodes in the order they are visited for the second time
 - <b>Postorder</b>: lists the nodes in the order they are visited for the last time
 
-An alternative way to define traversals is to do so recursively, using the hierarchical structure of a tree and its subtrees. Suppose $r$ denotes the root (of a subtree), $L$, and $R$ its left and right subtrees. Then the order of visiting the nodes in different traversals is specified as follows:
-- <b>Preorder</b>: $rLR$
-- <b>Preorder</b>: $LrR$
-- <b>Preorder</b>: $LRr$
+An alternative way to define traversals is to do so recursively, using a tree's hierarchical relationship with its subtrees. Suppose $r$ denotes the root (of a subtree), $L$, and $R$ its left and right subtrees, respectively. Then the order of visiting the nodes in different traversals is specified recursively as follows:
+- <b>Preorder</b>: $r\ L\ R$
+- <b>Preorder</b>: $L\ r\ R$
+- <b>Preorder</b>: $L\ R\ r$
  
 
