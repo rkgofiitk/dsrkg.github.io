@@ -19,7 +19,15 @@ If a binary tree is left-skewed or right-skewed, it represents a linear list. Si
 
 </div>
 
-The focus here is on one fundamental operation of a binary tree data structure. How do we process data represented as a binary tree? We require a way to navigate or traverse a binary tree. The traversal should always start from the root. It is essentially a walk around the tree, keeping close to each branch and moving around a leaf upon encountering one, until it reaches the root. The figure below illustrates a walk around a binary tree. Thus, a traversal:
+The focus here is on one fundamental operation of a binary tree data structure. How do we process data represented as a binary tree? We require a way to navigate or traverse a binary tree. The traversal should always start from the root. It is essentially a walk around the tree, keeping close to each branch and moving around a leaf upon encountering one, until it reaches the root. The figure below illustrates a walk around a binary tree.
+<div align="center">
+ 
+| Walk around a binary tree |
+|:----------:|
+| <img src="images/walk_binary_tree.png" width="60%"> 
+
+</div>
+Thus, a traversal:
 - Systematically visit each node three times,
 - Process the data represented by the visited node
 
