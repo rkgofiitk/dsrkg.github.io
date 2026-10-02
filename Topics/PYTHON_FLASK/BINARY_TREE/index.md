@@ -33,7 +33,7 @@ Thus, a traversal:
 - Process the data represented by the visited node
 
 Depending on the instance of the visit during traversal, we distinguish three traversal mechanisms.
-- <b>Preorder</b>: lists the nodes in the order they are visited for the first time: 1, 2, 6, 5, 7, 9, 10, 4
+- <b>Preorder</b>: lists the nodes in the order they are visited for the first time: 1, 2, 3, 5, 8, 9, 6, 10, 4, 7
 - <b>Inorder</b>: lists the nodes in the order they are visited for the second time
 - <b>Postorder</b>: lists the nodes in the order they are visited for the last time
 
