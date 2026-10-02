@@ -27,6 +27,7 @@ The focus here is on one fundamental operation of a binary tree data structure. 
 | <img src="images/walk_binary_tree.png" width="60%"> 
 
 </div>
+
 Thus, a traversal:
 - Systematically visit each node three times,
 - Process the data represented by the visited node
