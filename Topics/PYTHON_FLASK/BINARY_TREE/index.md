@@ -55,5 +55,9 @@ An alternative way to define traversals is to do so recursively, using a tree's 
 - <b>Preorder</b>: $r\ L\ R$
 - <b>Preorder</b>: $L\ r\ R$
 - <b>Preorder</b>: $L\ R\ r$
- 
+
+ ### Implementation 
+
+Implementing operations of a Binary Tree is much simpler than those of a linked list. The idea implementation is limited to the traversals. Insertion, deletion, or search operations are quite relevant here, because unless there is a superposition of a partial ordering on elements belonging to left and right subtrees, it will not be possible to implement mutating operations on a Binary Tree. The implementation of a Binary Tree here is controlled by a random decision to add a new node as a left or right child of an existing node. However, there is still an ambiguity concerning how to choose the new node's position. Therefore, we construct the tree level by level. To summarize, the implementation process is as follows.
+- 
 
