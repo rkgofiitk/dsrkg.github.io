@@ -18,6 +18,8 @@ The trees $T_1, T_2, \ldots, T_k$ are called subtrees of $T$. The roots $r_1, r_
 
 Starting from the root, we can reach a leaf node by selecting a child pointer at each internal node on the way. The sequence of nodes on the way from the root to a leaf is called <b>tree path</b>. No tree path can extend beyond a leaf, since the node has null pointers for its children. Any non-empty subsequence of a sequence of a tree path defines a subpath that is also a tree path. There is a similarity between a linked list and a tree path. A linked list cannot extend beyond its end node, which also has a null pointer, and a tree path cannot extend beyond a leaf. Every pair of nodes on a tree path is related by an <b>ancestor-descendant</b> relationship. The node closer to the root is an ancestor of the node farther from the root; the latter is called a descendant of the former node. The nodes that do not share the same tree path from a root to a leaf are unrelated by the ancestor-descendant relation. However, the nodes with the same parent are called <b>siblings</b>. The node where a subtree begins is called the root of the subtree. We will return to elaborate on the terminology later in our text.
 
+### Binary Tree
+
 A Binary Tree is a restricted class of trees for which $k$ is at most 2. An internal node in a binary tree has at least one child and at most 2 children, while a leaf node has no children. The two subtrees of the root in a Binary Tree are known as the left and right subtrees. A link to the left child of a node is called the <b>left branch</b>, and the link to a right child is called the <b>right branch</b>. If a binary tree is left-skewed or right-skewed, it resembles a linear list. Similarly, if the left or right child links of the internal nodes are absent, the binary tree resembles a linked list. The configurations of a binary tree representing a linked list are shown in the figure below.
 
 <div align="center">
@@ -27,6 +29,8 @@ A Binary Tree is a restricted class of trees for which $k$ is at most 2. An inte
 | <img src="images/left_skewed_binary_tree.png" width="60%"> | <img src="images/right_skewed_binary_tree.png" width="60%" > |  <img src="images/skewed_binary_tree.png" width="60%"> |
 
 </div>
+
+### Traversals of a Binary Tree
 
 How do we process data represented as a binary tree? The fundamental operation involved in processing a binary tree data structure is a traversal. The traversal is essentially a <b>walk</b> around the branches of a Binary Tree starting from the root. The figure below illustrates a walk around a binary tree.
 
