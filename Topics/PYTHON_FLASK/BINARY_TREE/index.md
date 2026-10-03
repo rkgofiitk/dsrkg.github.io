@@ -6,8 +6,6 @@ layout: default
 
 ## Binary Tree Animation
 
-A binary tree is the simplest non-linear data structure. Each tree node has two pointers, rather than one, as in a linked list. The two pointers are separately identified as the left and right children. 
-
 We borrow terminology from a family tree to describe relationships between the nodes in a tree. The terminology is valid for generic tree structures. A tree consists of a collection of nodes. A node is a non-divisible unit of information (a record) in a large data structure, such as a linked list. A node may also contain links (pointers) to other nodes. One specially identified node is designated as the root of the tree. To explore a tree, we always start from a specially designated node called the root. The remaining nodes are classified either as leaves or internal nodes. Formally, a tree represents a hierarchical structure defined recursively as follows:
 
 <strong>Definition: </strong> A tree $T$ can be empty, or may consist of
