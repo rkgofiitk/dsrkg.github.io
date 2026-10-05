@@ -69,4 +69,12 @@ The main backend class consists of:
 - Inserting these elements starting with an empty binary tree
 - Generating traversal list when required.
 
-Generating a random list fairly straightforward. We use the random sample to create MAX_NODES number of elements, choosing from 1 to 100. The list is then used by the function <tt> random_insert()</tt>.
+Generating a random list fairly straightforward. We use the random sample to create MAX_NODES number of elements, choosing from 1 to 100. The list is then used by the function <tt>random_insert()</tt> to insert elements one at a time. This function is the heart of the random creation of a binary tree.
+
+Initially, the root $r$ is created from the first incoming number, and a double-ended queue (dequeue) is initialized by pushing $r$ to it. It allows the function to progress the creation of a binary tree in level order. The rest of the logic is explained below.
+- Dequeue the leftmost value from the dequeue, call it $n$.
+- Call <tt>random.chice()</tt> to start random phase of insertion.
+- If $n$ does not have a left child, the new node is inserted there. This insertion have 50% success rate.  
+- If $n$ does not have a right child, the new node is inserted there. This insertion have 50% success rate.
+- If random insertion fails, then  find the first available left or right child slot in level order to force an insertion.  
+  
