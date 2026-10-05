@@ -77,4 +77,7 @@ Initially, the root $r$ is created from the first incoming number, and a double-
 - If $n$ does not have a left child, the new node is inserted there. This insertion have 50% success rate.  
 - If $n$ does not have a right child, the new node is inserted there. This insertion have 50% success rate.
 - If random insertion fails, then  find the first available left or right child slot in level order to force an insertion.  
-  
+
+Since the existing nodes in the tree are deleted from the queue, the level order traversal is guaranteed when the random phase fails.
+
+The other prominent operations in the backend are traversals. Traversal algorithms are designed recursively as we described above. Implementation requires a helper function. The recursive part is handled by a helper function, while the main function merely calls it to start the recursion.  
