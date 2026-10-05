@@ -60,6 +60,13 @@ An alternative way to define traversals is to do so recursively, using a tree's 
 
 Implementing operations of a Binary Tree is much simpler than those of a linked list. The idea implementation here is limited to the traversals. The mutating operations, such as insertion, deletion, or search operations important. But it will not be possible to implement these operations unless we impose a partial ordering on the elements of the left and right subtrees. Binary Search Trees (BSTs), which we plan to present next, impose an ordering on nodes based on whether they belong to the left or right subtrees of a given node.  
 
-The implementation of a Binary Tree here is based on a random decision to add a new node as a left or right child of an existing node.
+The implementation of a Binary Tree here is based on a random decision to add a new node as a left or right child of an existing node. The implementation consists of the following:
+- Binary tree class: Controls binary tree operations.
+- Flassk app backend: Driver code for frontend.
 
+The main backend class consists of:
+- Generating a random list of elements
+- Inserting these elements starting with an empty binary tree
+- Generating traversal list when required.
 
+Generating a random list fairly straightforward. We use the random sample to create MAX_NODES number of elements, choosing from 1 to 100. The list is then used by the function <tt> random_insert()</tt>.
