@@ -58,7 +58,8 @@ An alternative way to define traversals is to do so recursively, using a tree's 
 
  ### Implementation 
 
-Implementing operations of a Binary Tree is much simpler than those of a linked list. The idea implementation is limited to the traversals. Insertion, deletion, or search operations are quite relevant here, because unless there is a superposition of a partial ordering on elements belonging to left and right subtrees, it will not be possible to implement mutating operations on a Binary Tree. The implementation of a Binary Tree here is controlled by a random decision to add a new node as a left or right child of an existing node. However, there is still an ambiguity concerning how to choose the new node's position. Therefore, we construct the tree level by level. To summarize, the implementation process is as follows.
+Implementing operations of a Binary Tree is much simpler than those of a linked list. The idea implementation here is limited to the traversals. The mutating operations, such as insertion, deletion, or search operations important. But it will not be possible to implement these operations unless we impose a partial ordering on the elements of the left and right subtrees. Binary Search Trees (BSTs), which we plan to present next, impose an ordering on nodes based on whether they belong to the left or right subtrees of a given node.  
 
-- 
+The implementation of a Binary Tree here is based on a random decision to add a new node as a left or right child of an existing node.
+
 
