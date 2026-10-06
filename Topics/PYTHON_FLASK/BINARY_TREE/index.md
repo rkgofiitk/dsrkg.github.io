@@ -117,3 +117,12 @@ The animation is handled by embedded JavaScript in the <tt>index.html</tt> file.
 | <img src="images/folder_structure_btree.png" width="60%"> 
 
 </div>
+
+It is possible to separate JavaScript from HTML by creating a folder <tt>static</tt> and placing the script file there. The HTML file specifies:
+- CSS styles
+- Control Buttons
+
+The number of nodes can be controlled by a backend variable <tt>MAX_NODES</tt> in <tt>btree_operations.py</tt>. Since the generation of the binary tree is random, which returns a list of nodes, the frontend animates the display in the visual area of the canvas.   
+
+
+The front has several functions:
