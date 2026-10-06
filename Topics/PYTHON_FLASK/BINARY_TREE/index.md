@@ -49,7 +49,7 @@ The height and size of a binary tree play a crucial role in analyzing the time c
  
 | T(h) = max(L(h), R(h)) + 1| Size = Size(L) + Size(R) + 1 |
 |:----------:|:-----------:|
-| <img src="images/heightComp_page1.png" width="60%"> | <img src="images/sizeComp_page1.png" width="60%" > |
+| <img src="images/heightComp.png" width="60%"> | <img src="images/sizeComp.png" width="60%" > |
 </div>
 
 The figure shows that we compute the height of a binary tree as the maximum of the heights of its left and right subtrees, plus 1 for the root node. The size of a binary tree is equal to the number of nodes in it. So, we can compute the size by finding the sizes of its left and right subtrees, summing both size and adding 1 to it. 
