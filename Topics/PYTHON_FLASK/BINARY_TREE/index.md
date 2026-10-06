@@ -40,11 +40,18 @@ A Binary Tree is a restricted class of trees for which $k$ is at most 2. An inte
  
 | Structure of a node |
 |:----------:|
-| <img src="images/tree_node_structure.png" width="60%"> |
+| <img src="images/nodeStructure.png" width="60%"> |
 
 </div>
 
 The height and size of a binary tree play a crucial role in analyzing the time complexity of algorithms. The figures below explain these elements. The definitions are extendable to a generic tree structure in a natural way, considering the $k$ children or $k$ subtrees of a node. 
+<div align="center">
+ 
+| Height| Size |
+|:----------:|:-----------:|
+| <img src="images/heightComp.png" width="60%"> | <img src="images/size.png" width="60%" > |
+</div>
+
 
 ### Traversals of a Binary Tree
 
