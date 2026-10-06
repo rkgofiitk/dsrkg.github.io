@@ -40,7 +40,7 @@ A Binary Tree is a restricted class of trees for which $k$ is at most 2. An inte
  
 | Structure of a node |
 |:----------:|
-| <img src="images/nodeStructure.png" width="60%"> |
+| <img src="images/nodeStruct.png" width="60%"> |
 
 </div>
 
@@ -49,7 +49,7 @@ The height and size of a binary tree play a crucial role in analyzing the time c
  
 | Height| Size |
 |:----------:|:-----------:|
-| <img src="images/heightComp.png" width="60%"> | <img src="images/size.png" width="60%" > |
+| <img src="images/heightComp_page1.png" width="60%"> | <img src="images/sizeComp_page1.png" width="60%" > |
 </div>
 
 
