@@ -114,6 +114,6 @@ The animation is handled by embedded JavaScript in the <tt>index.html</tt> file.
  
 | Folder structure |
 |:----------:|
-| <img src="images/folder_structure.png" width="60%"> 
+| <img src="images/folder_structure_btree.png" width="60%"> 
 
 </div>
