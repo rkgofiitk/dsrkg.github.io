@@ -102,6 +102,18 @@ Initially, the root $r$ is created from the first incoming number, and a double-
 - If $n$ does not have a right child, the new node is inserted there. This insertion have 50% success rate.
 - If random insertion fails, then  find the first available left or right child slot in level order to force an insertion.  
 
-Since the existing nodes in the tree are deleted from the queue, the level order traversal is guaranteed when the random phase fails.
+Since the existing nodes in the tree are deleted from the queue, the level order traversal is guaranteed both in the random phase and the forced insertion step.
 
-The other prominent operations in the backend are traversals. Traversal algorithms are designed recursively as we described above. Implementation requires a helper function. The recursive part is handled by a helper function, while the main function merely calls it to start the recursion.  
+The other prominent operations in the backend are traversals. Traversal algorithms are designed recursively, as described above. The implementation is through a controlling function that invokes a helper function. The helper function handles the recursion step.
+
+### Frontend for Animation 
+
+The animation is handled by embedded JavaScript in the <tt>index.html</tt> file. The animation's folder structure is shown in the image below.
+
+<div align="center">
+ 
+| Folder structure |
+|:----------:|
+| <img src="images/directory_struct_btree.png" width="60%"> 
+
+</div>
