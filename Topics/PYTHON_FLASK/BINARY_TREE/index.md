@@ -8,7 +8,8 @@ layout: default
 
 ### General Tree Terminology
 
-We borrow terminology from a family tree to describe relationships between the nodes in a tree. The terminology is valid for generic tree structures. A tree consists of a collection of nodes. A node is a non-divisible unit of information (a record) in a large data structure, such as a linked list. It may contain links (pointers) to other nodes. One node is designated as the root of the tree. The remaining nodes are classified either as <b>leaves</b> or <b>internal nodes</b>.  Formally, a tree represents a hierarchical structure defined recursively as follows:
+We borrow terminology from a family tree to describe relationships between the nodes in a tree. The terminology is valid for generic tree structures. A tree consists of a collection of nodes. A node is a non-divisible unit of information (a record) in a large data structure, such as a linked list.
+It may contain links (pointers) to other nodes. One node is designated as the root of the tree. The remaining nodes are classified either as <b>leaves</b> or <b>internal nodes</b>.  Formally, a tree represents a hierarchical structure defined recursively as follows:
 
 <strong>Definition: </strong> A tree $T$ can be empty, or may consist of
 - One special node $r$ called the root.
@@ -17,6 +18,8 @@ We borrow terminology from a family tree to describe relationships between the n
 The trees $T_1, T_2, \ldots, T_k$ are called subtrees of $T$. The roots $r_1, r_2, \ldots, r_k$ of subtrees are called children of $r$, and the node $r$ contains pointers to reach each of its children. The nodes in a tree $T$ are, thus, accessible through its root $r$. 
 
 To explore a tree, we always start from the root. Starting from the root, we can reach a leaf node by selecting a child pointer at each internal node on the way. The sequence of nodes from the root to a leaf is called <b>tree path</b>. No tree path can extend beyond a leaf, since the node has null pointers for its children. Any non-empty subsequence of a sequence of a tree path defines a subpath that is also a tree path. There is a similarity between a linked list and a tree path. A linked list cannot extend beyond its last node that has a null pointer for its next field. Similarly, a tree path cannot extend beyond a leaf that contains no child pointer. Every pair of nodes on a tree path is related by an <b>ancestor-descendant</b> relationship. The node closer to the root is an ancestor of the node farther from the root; the latter is called a descendant of the former node. The nodes that do not share the same tree path from a root to a leaf are unrelated by the ancestor-descendant relation. The nodes with the same parent are called <b>siblings</b>. The node where a subtree begins is called the root of the subtree. We will return to elaborate on the terminology later in our text.
+
+
 
 ### Binary Tree
 
@@ -29,6 +32,19 @@ A Binary Tree is a restricted class of trees for which $k$ is at most 2. An inte
 | <img src="images/left_skewed_binary_tree.png" width="60%"> | <img src="images/right_skewed_binary_tree.png" width="60%" > |  <img src="images/skewed_binary_tree.png" width="60%"> |
 
 </div>
+
+### Node Structure, Height, and Size 
+
+ A most basic description of a node in a binary tree with left and right child links is provided in the image below.
+<div align="center">
+ 
+| Structure of a node |
+|:----------:|
+| <img src="images/tree_node_structure.png" width="60%"> |
+
+</div>
+
+The height and size of a binary tree play a crucial role in analyzing the time complexity of algorithms. The figures below explain these elements. The definitions are extendable to a generic tree structure in a natural way, considering the $k$ children or $k$ subtrees of a node. 
 
 ### Traversals of a Binary Tree
 
