@@ -21,30 +21,6 @@ button { margin: 10px; }
 </script>
 <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-  const sections = document.querySelectorAll(".section");
-  let current = 0;
-
-  function show(n) {
-    sections.forEach((el, i) => {
-      el.style.display = (i === n) ? "block" : "none";
-    });
-    // re-typeset math in the newly visible section
-    if (window.MathJax) {
-      MathJax.typesetPromise([sections[n]]);
-    }
-    // disable buttons at ends
-    document.querySelectorAll("button[onclick='prev()']").forEach(btn => btn.disabled = (n === 0));
-    document.querySelectorAll("button[onclick='next()']").forEach(btn => btn.disabled = (n === sections.length - 1));
-  }
-
-  window.next = () => { if (current < sections.length - 1) { current++; show(current); } };
-  window.prev = () => { if (current > 0) { current--; show(current); } };
-
-  show(current);
-});
-</script>
 
 
 
