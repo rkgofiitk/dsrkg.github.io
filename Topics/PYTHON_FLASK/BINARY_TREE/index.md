@@ -22,7 +22,7 @@ A tree $T$ can be empty, or may consist of:
 - One special node $r$ called the root.
 - A set of $k$ trees $T_1, T_2, \\ldots, T_k$ (possibly empty) with roots $r_1, r_2, \\ldots, r_k$ respectively.
 
-The trees $T_1, T_2, \ldots, T_k$ are called subtrees of $T$. The roots $r_1, r_2, \ldots, r_k$ of subtrees are called children of $r$, and the node $r$ contains pointers to reach each of its children. The nodes in a tree $T$ are, thus, accessible through its root $r$. 
+The trees $T_1, T_2, \\ldots, T_k$ are called subtrees of $T$. The roots $r_1, r_2, \\ldots, r_k$ of subtrees are called children of $r$, and the node $r$ contains pointers to reach each of its children. The nodes in a tree $T$ are, thus, accessible through its root $r$. 
 
 To explore a tree, we always start from the root. Starting from the root, we can reach a leaf node by selecting a child pointer at each internal node on the way. The sequence of nodes from the root to a leaf is called <b>tree path</b>. No tree path can extend beyond a leaf, since the node has null pointers for its children. Any non-empty subsequence of a sequence of a tree path defines a subpath that is also a tree path. There is a similarity between a linked list and a tree path. A linked list cannot extend beyond its last node that has a null pointer for its next field. Similarly, a tree path cannot extend beyond a leaf that contains no child pointer. Every pair of nodes on a tree path is related by an <b>ancestor-descendant</b> relationship. The node closer to the root is an ancestor of the node farther from the root; the latter is called a descendant of the former node. The nodes that do not share the same tree path from a root to a leaf are unrelated by the ancestor-descendant relation. The nodes with the same parent are called <b>siblings</b>. The node where a subtree begins is called the root of the subtree. We will return to elaborate on the terminology later in our text.
 
@@ -95,9 +95,9 @@ Depending on the instance of the visit during traversal, we distinguish three tr
 - <b>Postorder</b> that lists the nodes in the order they are visited for the last time. For the example shown above, the postorder list is: 2, 8, 9, 5, 10, 6, 3, 1
 
 An alternative way to define traversals is to do so recursively, using a tree's hierarchical relationship with its subtrees. Suppose $r$ denotes the root (of a subtree), $L$, and $R$ its left and right subtrees, respectively. Then the order of visiting the nodes in different traversals is specified recursively as follows:
-- <b>Preorder</b>: $r\ L\ R$
-- <b>Preorder</b>: $L\ r\ R$
-- <b>Preorder</b>: $L\ R\ r$
+- <b>Preorder</b>: $r\\ L\\ R$
+- <b>Preorder</b>: $L\\ r\\ R$
+- <b>Preorder</b>: $L\\ R\\ r$
 
 </div>
 
