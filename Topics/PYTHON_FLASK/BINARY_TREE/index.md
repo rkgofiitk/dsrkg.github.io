@@ -4,7 +4,6 @@ layout: default
 ---
 {% include head-custom.html %}
 
-
 <h3>General Tree Terminology</h3>
 
 We borrow terminology from a family tree to describe relationships between the nodes in a tree. The terminology is valid for generic tree structures. A tree consists of a collection of nodes. A node is a non-divisible unit of information (a record) in a large data structure, such as a linked list.
@@ -19,7 +18,6 @@ A tree $T$ can be empty, or may consist of:
 The trees $T_1, T_2, \\ldots, T_k$ are called subtrees of $T$. The roots $r_1, r_2, \\ldots, r_k$ of subtrees are called children of $r$, and the node $r$ contains pointers to reach each of its children. The nodes in a tree $T$ are, thus, accessible through its root $r$. 
 
 To explore a tree, we always start from the root. Starting from the root, we can reach a leaf node by selecting a child pointer at each internal node on the way. The sequence of nodes from the root to a leaf is called <b>tree path</b>. No tree path can extend beyond a leaf, since the node has null pointers for its children. Any non-empty subsequence of a sequence of a tree path defines a subpath that is also a tree path. There is a similarity between a linked list and a tree path. A linked list cannot extend beyond its last node that has a null pointer for its next field. Similarly, a tree path cannot extend beyond a leaf that contains no child pointer. Every pair of nodes on a tree path is related by an <b>ancestor-descendant</b> relationship. The node closer to the root is an ancestor of the node farther from the root; the latter is called a descendant of the former node. The nodes that do not share the same tree path from a root to a leaf are unrelated by the ancestor-descendant relation. The nodes with the same parent are called <b>siblings</b>. The node where a subtree begins is called the root of the subtree. We will return to elaborate on the terminology later in our text.
-
 
 <h3>Binary Tree</h3> 
 
@@ -58,7 +56,6 @@ The height and size of a binary tree play a crucial role in analyzing the time c
 </div>
 
 The figure shows that we compute the height of a binary tree as the maximum of the heights of its left and right subtrees, plus 1 for the root node. The size of a binary tree is equal to the number of nodes in it. So, we can compute the size by finding the sizes of its left and right subtrees, summing them, and adding 1. 
-
 
 <h3>Traversals of a Binary Tree</h3>
 
@@ -112,8 +109,6 @@ Initially, the root $r$ is created from the first incoming number, and a double-
 Since the existing nodes in the tree are deleted from the queue, the level order traversal is guaranteed both in the random phase and the forced insertion step.
 
 The other prominent operations in the backend are traversals. Traversal algorithms are designed recursively, as described above. The implementation is through a controlling function that invokes a helper function. The helper function handles the recursion step.
-
-
  
 <h3> Frontend for Animation </h3>
 
