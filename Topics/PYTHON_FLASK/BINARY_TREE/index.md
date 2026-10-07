@@ -6,7 +6,7 @@ layout: default
 
 <div class="section" id="s1">
 
-<h3> General Tree Terminology</h3>
+<h3>General Tree Terminology</h3>
 
 We borrow terminology from a family tree to describe relationships between the nodes in a tree. The terminology is valid for generic tree structures. A tree consists of a collection of nodes. A node is a non-divisible unit of information (a record) in a large data structure, such as a linked list.
 It may contain links (pointers) to other nodes. One node is designated as the root of the tree. The remaining nodes are classified either as <b>leaves</b> or <b>internal nodes</b>.  Formally, a tree represents a hierarchical structure defined recursively as follows:
@@ -34,11 +34,12 @@ A Binary Tree is a restricted class of trees for which $k$ is at most 2. An inte
 | <img src="images/left_skewed_binary_tree.png" width="60%"> | <img src="images/right_skewed_binary_tree.png" width="60%" > |  <img src="images/skewed_binary_tree.png" width="60%"> |
 
 </div>
+
 </div>
 
 <div class="section" id="s3">
 
- <h3>Node Structure, Height, and Size </h3>
+<h3>Node Structure, Height, and Size </h3>
 
  A most basic description of a node in a binary tree with left and right child links is provided in the image below.
 
@@ -145,7 +146,8 @@ The number of nodes can be controlled by a backend variable <tt>MAX_NODES</tt> i
 
 <div class="section" id="s7">
 
- <h3>Frontend Functions</h3>
+<h3>Frontend Functions</h3>
+
 The front has several functions:
 
 </div>
