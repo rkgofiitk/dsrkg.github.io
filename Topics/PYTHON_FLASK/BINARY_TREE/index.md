@@ -4,8 +4,6 @@ layout: default
 ---
 {% include head-custom.html %}
 
-## Binary Tree Animation
-
 <div class="section" id="s1">
 
 <h3> General Tree Terminology</h3>
