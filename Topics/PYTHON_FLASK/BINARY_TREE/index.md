@@ -43,6 +43,7 @@ A Binary Tree is a restricted class of trees for which $k$ is at most 2. An inte
  <h3>Node Structure, Height, and Size </h3>
 
  A most basic description of a node in a binary tree with left and right child links is provided in the image below.
+
 <div align="center">
  
 | Structure of a node |
@@ -52,6 +53,7 @@ A Binary Tree is a restricted class of trees for which $k$ is at most 2. An inte
 </div>
  
 The height and size of a binary tree play a crucial role in analyzing the time complexity of algorithms. The figures below explain these elements. The definitions are extendable to a generic tree structure in a natural way, considering the $k$ children or $k$ subtrees of a node. 
+
 <div align="center">
  
 | T(h) = max(L(h), R(h)) + 1| Size = Size(L) + Size(R) + 1 |
@@ -65,7 +67,6 @@ The figure shows that we compute the height of a binary tree as the maximum of t
 </div>
 
 <div class="section" id="s4">
- 
 <h3>Traversals of a Binary Tree</h3>
 
 How do we process data represented as a binary tree? We will consider each node that only stores one unit of data. However, in practice, it will depend on the nature of the requirements for solving a problem at hand. The fundamental operation involved in processing a binary tree data structure is a traversal. The traversal is essentially a <b>walk</b> around the branches of a Binary Tree starting from the root. The figure below illustrates a walk around a binary tree.
@@ -93,8 +94,8 @@ An alternative way to define traversals is to do so recursively, using a tree's 
 - <b>Preorder</b>: $L\ R\ r$
 
 </div>
+
 <div class="section" id="s5">
- 
 <h3>Implementation </h3>
 
 Implementing operations of a Binary Tree is much simpler than those of a linked list. The idea implementation here is limited to the traversals. The mutating operations, such as insertion, deletion, or search operations important. But it will not be possible to implement these operations unless we impose a partial ordering on the elements of the left and right subtrees. Binary Search Trees (BSTs), which we plan to present next, impose an ordering on nodes based on whether they belong to the left or right subtrees of a given node.  
@@ -120,8 +121,8 @@ Initially, the root $r$ is created from the first incoming number, and a double-
 Since the existing nodes in the tree are deleted from the queue, the level order traversal is guaranteed both in the random phase and the forced insertion step.
 
 The other prominent operations in the backend are traversals. Traversal algorithms are designed recursively, as described above. The implementation is through a controlling function that invokes a helper function. The helper function handles the recursion step.
-</div>
 
+</div>
 <div class="section" id="s6">
  
 <h3> Frontend for Animation </h3>
@@ -145,8 +146,10 @@ The number of nodes can be controlled by a backend variable <tt>MAX_NODES</tt> i
 </div>
 
 <div class="section" id="s7">
+
  <h3>Frontend Functions</h3>
 The front has several functions:
+
 </div>
 
 <button onclick="prev()">⬅️ Previous</button>
