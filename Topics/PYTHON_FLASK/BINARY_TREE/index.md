@@ -5,9 +5,6 @@ layout: default
 {% include head-custom.html %}
 
 
-
-<div class="section" id="s1">
-
 <h3>General Tree Terminology</h3>
 
 We borrow terminology from a family tree to describe relationships between the nodes in a tree. The terminology is valid for generic tree structures. A tree consists of a collection of nodes. A node is a non-divisible unit of information (a record) in a large data structure, such as a linked list.
@@ -23,9 +20,6 @@ The trees $T_1, T_2, \\ldots, T_k$ are called subtrees of $T$. The roots $r_1, r
 
 To explore a tree, we always start from the root. Starting from the root, we can reach a leaf node by selecting a child pointer at each internal node on the way. The sequence of nodes from the root to a leaf is called <b>tree path</b>. No tree path can extend beyond a leaf, since the node has null pointers for its children. Any non-empty subsequence of a sequence of a tree path defines a subpath that is also a tree path. There is a similarity between a linked list and a tree path. A linked list cannot extend beyond its last node that has a null pointer for its next field. Similarly, a tree path cannot extend beyond a leaf that contains no child pointer. Every pair of nodes on a tree path is related by an <b>ancestor-descendant</b> relationship. The node closer to the root is an ancestor of the node farther from the root; the latter is called a descendant of the former node. The nodes that do not share the same tree path from a root to a leaf are unrelated by the ancestor-descendant relation. The nodes with the same parent are called <b>siblings</b>. The node where a subtree begins is called the root of the subtree. We will return to elaborate on the terminology later in our text.
 
-</div>
-
-<div class="section" id="s2">
 
 <h3>Binary Tree</h3> 
 
@@ -39,9 +33,7 @@ A Binary Tree is a restricted class of trees for which $k$ is at most 2. An inte
 
 </div>
 
-</div>
 
-<div class="section" id="s3">
 
 <h3>Node Structure, Height, and Size </h3>
 
@@ -67,9 +59,7 @@ The height and size of a binary tree play a crucial role in analyzing the time c
 
 The figure shows that we compute the height of a binary tree as the maximum of the heights of its left and right subtrees, plus 1 for the root node. The size of a binary tree is equal to the number of nodes in it. So, we can compute the size by finding the sizes of its left and right subtrees, summing them, and adding 1. 
 
-</div>
 
-<div class="section" id="s4">
 <h3>Traversals of a Binary Tree</h3>
 
 How do we process data represented as a binary tree? We will consider each node that only stores one unit of data. However, in practice, it will depend on the nature of the requirements for solving a problem at hand. The fundamental operation involved in processing a binary tree data structure is a traversal. The traversal is essentially a <b>walk</b> around the branches of a Binary Tree starting from the root. The figure below illustrates a walk around a binary tree.
@@ -96,9 +86,7 @@ An alternative way to define traversals is to do so recursively, using a tree's 
 - <b>Preorder</b>: $L\\ r\\ R$
 - <b>Preorder</b>: $L\\ R\\ r$
 
-</div>
 
-<div class="section" id="s5">
 <h3>Implementation </h3>
 
 Implementing operations of a Binary Tree is much simpler than those of a linked list. The idea implementation here is limited to the traversals. The mutating operations, such as insertion, deletion, or search operations important. But it will not be possible to implement these operations unless we impose a partial ordering on the elements of the left and right subtrees. Binary Search Trees (BSTs), which we plan to present next, impose an ordering on nodes based on whether they belong to the left or right subtrees of a given node.  
@@ -125,8 +113,7 @@ Since the existing nodes in the tree are deleted from the queue, the level order
 
 The other prominent operations in the backend are traversals. Traversal algorithms are designed recursively, as described above. The implementation is through a controlling function that invokes a helper function. The helper function handles the recursion step.
 
-</div>
-<div class="section" id="s6">
+
  
 <h3> Frontend for Animation </h3>
 
@@ -146,16 +133,12 @@ It is possible to separate JavaScript from HTML by creating a folder <tt>static<
 
 The number of nodes can be controlled by a backend variable <tt>MAX_NODES</tt> in <tt>btree_operations.py</tt>. Since the generation of the binary tree is random and returns a list of nodes, the frontend animates the display in the canvas's visual area.   
 
-</div>
 
-<div class="section" id="s7">
 
 <h3>Frontend Functions</h3>
 
 The front has several functions:
 
-</div>
 
-<button onclick="prev()">⬅️ Previous</button>
-<button onclick="next()">Next ➡️</button>
+
 
