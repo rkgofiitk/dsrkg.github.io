@@ -8,8 +8,6 @@ layout: default
 
 <div class="section" id="s1">
 
-
-
 ### General Tree Terminology
 
 We borrow terminology from a family tree to describe relationships between the nodes in a tree. The terminology is valid for generic tree structures. A tree consists of a collection of nodes. A node is a non-divisible unit of information (a record) in a large data structure, such as a linked list.
@@ -23,9 +21,11 @@ The trees $T_1, T_2, \ldots, T_k$ are called subtrees of $T$. The roots $r_1, r_
 
 To explore a tree, we always start from the root. Starting from the root, we can reach a leaf node by selecting a child pointer at each internal node on the way. The sequence of nodes from the root to a leaf is called <b>tree path</b>. No tree path can extend beyond a leaf, since the node has null pointers for its children. Any non-empty subsequence of a sequence of a tree path defines a subpath that is also a tree path. There is a similarity between a linked list and a tree path. A linked list cannot extend beyond its last node that has a null pointer for its next field. Similarly, a tree path cannot extend beyond a leaf that contains no child pointer. Every pair of nodes on a tree path is related by an <b>ancestor-descendant</b> relationship. The node closer to the root is an ancestor of the node farther from the root; the latter is called a descendant of the former node. The nodes that do not share the same tree path from a root to a leaf are unrelated by the ancestor-descendant relation. The nodes with the same parent are called <b>siblings</b>. The node where a subtree begins is called the root of the subtree. We will return to elaborate on the terminology later in our text.
 
+</div>
 
+<div class="section" id="s2">
 
-### Binary Tree
+ ### Binary Tree
 
 A Binary Tree is a restricted class of trees for which $k$ is at most 2. An internal node in a binary tree has at least one child and at most 2 children, while a leaf node has no children. The two subtrees of the root in a Binary Tree are known as the left and right subtrees. A link to the left child of a node is called the <b>left branch</b>, and the link to a right child is called the <b>right branch</b>. If a binary tree is left-skewed or right-skewed, it resembles a linear list. Similarly, if the left or right child links of the internal nodes are absent, the binary tree resembles a linked list. The configurations of a binary tree representing a linked list are shown in the figure below. The reader may notice that any  tree where each internal node has one child resembles a linked list.
 
@@ -49,9 +49,7 @@ A Binary Tree is a restricted class of trees for which $k$ is at most 2. An inte
 </div>
 </div>
 
-<button onclick="prev()">⬅️ Previous</button>
-<button onclick="next()">Next ➡️</button>
-
+<div class="section" id="s3">
 The height and size of a binary tree play a crucial role in analyzing the time complexity of algorithms. The figures below explain these elements. The definitions are extendable to a generic tree structure in a natural way, considering the $k$ children or $k$ subtrees of a node. 
 <div align="center">
  
@@ -62,7 +60,8 @@ The height and size of a binary tree play a crucial role in analyzing the time c
 </div>
 
 The figure shows that we compute the height of a binary tree as the maximum of the heights of its left and right subtrees, plus 1 for the root node. The size of a binary tree is equal to the number of nodes in it. So, we can compute the size by finding the sizes of its left and right subtrees, summing both size and adding 1 to it. 
-
+</div>
+<div class="section" id="s4">
 ### Traversals of a Binary Tree
 
 How do we process data represented as a binary tree? We will consider each node that only stores one unit of data. However, in practice, it will depend on the nature of the requirements for solving a problem at hand. The fundamental operation involved in processing a binary tree data structure is a traversal. The traversal is essentially a <b>walk</b> around the branches of a Binary Tree starting from the root. The figure below illustrates a walk around a binary tree.
@@ -89,6 +88,9 @@ An alternative way to define traversals is to do so recursively, using a tree's 
 - <b>Preorder</b>: $L\ r\ R$
 - <b>Preorder</b>: $L\ R\ r$
 
+</div>
+<div class="section" id="s5">
+ 
  ### Implementation 
 
 Implementing operations of a Binary Tree is much simpler than those of a linked list. The idea implementation here is limited to the traversals. The mutating operations, such as insertion, deletion, or search operations important. But it will not be possible to implement these operations unless we impose a partial ordering on the elements of the left and right subtrees. Binary Search Trees (BSTs), which we plan to present next, impose an ordering on nodes based on whether they belong to the left or right subtrees of a given node.  
@@ -114,7 +116,9 @@ Initially, the root $r$ is created from the first incoming number, and a double-
 Since the existing nodes in the tree are deleted from the queue, the level order traversal is guaranteed both in the random phase and the forced insertion step.
 
 The other prominent operations in the backend are traversals. Traversal algorithms are designed recursively, as described above. The implementation is through a controlling function that invokes a helper function. The helper function handles the recursion step.
+</div>
 
+<div class="section" id="s6">
 ### Frontend for Animation 
 
 The animation is handled by embedded JavaScript in the <tt>index.html</tt> file. The animation's folder structure is shown in the image below.
@@ -131,8 +135,10 @@ It is possible to separate JavaScript from HTML by creating a folder <tt>static<
 - CSS styles
 - Control Buttons
 
-The number of nodes can be controlled by a backend variable <tt>MAX_NODES</tt> in <tt>btree_operations.py</tt>. Since the generation of the binary tree is random, which returns a list of nodes, the frontend animates the display in the visual area of the canvas.   
+The number of nodes can be controlled by a backend variable <tt>MAX_NODES</tt> in <tt>btree_operations.py</tt>. Since the generation of the binary tree is random and returns a list of nodes, the frontend animates the display in the canvas's visual area.   
 
 
 The front has several functions:
-
+</div>
+<button onclick="prev()">⬅️ Previous</button>
+<button onclick="next()">Next ➡️</button>
