@@ -1,22 +1,18 @@
 <style>
 .section { display: none; }
 button { margin: 10px; }
-.nav-buttons {
-  text-align: right;
-  margin: 10px 0;
-}
-.nav-buttons button {
-  margin-left: 5px;
-}
+.nav-buttons { text-align: right; margin: 10px 0; }
+.nav-buttons button { margin-left: 5px; }
 </style>
 
+<!-- MathJax configuration -->
 <script>
   window.MathJax = {
     tex: {
       inlineMath: [['$', '$'], ['\\(', '\\)']],
-      displayMath: [['$$', '$$'], ['\
+      displayMath: [['$$','$$'], ['\
 
-\[', '\\]
+\[','\\]
 
 ']]
     },
@@ -25,40 +21,31 @@ button { margin: 10px; }
 </script>
 <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
-
-
 <script>
 document.addEventListener("DOMContentLoaded", () => {
   const sections = document.querySelectorAll(".section");
-  let current = 0;  // start at first section
+  let current = 0;
 
   function show(n) {
     sections.forEach((el, i) => {
       el.style.display = (i === n) ? "block" : "none";
     });
-    // optional: disable buttons at ends
-    document.querySelector("button[onclick='prev()']").disabled = (n === 0);
-    document.querySelector("button[onclick='next()']").disabled = (n === sections.length - 1);
+    // re-typeset math in the newly visible section
+    if (window.MathJax) {
+      MathJax.typesetPromise([sections[n]]);
+    }
+    // disable buttons at ends
+    document.querySelectorAll("button[onclick='prev()']").forEach(btn => btn.disabled = (n === 0));
+    document.querySelectorAll("button[onclick='next()']").forEach(btn => btn.disabled = (n === sections.length - 1));
   }
 
-  window.next = function() {
-    if (current < sections.length - 1) {
-      current++;
-      show(current);
-    }
-  };
+  window.next = () => { if (current < sections.length - 1) { current++; show(current); } };
+  window.prev = () => { if (current > 0) { current--; show(current); } };
 
-  window.prev = function() {
-    if (current > 0) {
-      current--;
-      show(current);
-    }
-  };
-
-  // show the first section initially
   show(current);
 });
 </script>
+
 
 
 
