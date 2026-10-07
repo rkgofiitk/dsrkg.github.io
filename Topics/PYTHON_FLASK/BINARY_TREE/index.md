@@ -4,10 +4,7 @@ layout: default
 ---
 {% include head-custom.html %}
 
-<div style="text-align:right; margin-bottom:10px;">
-  <button onclick="prev()">⬅️ Previous</button>
-  <button onclick="next()">Next ➡️</button>
-</div>
+
 
 <div class="section" id="s1">
 
