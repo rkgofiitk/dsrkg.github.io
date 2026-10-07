@@ -48,6 +48,10 @@ A Binary Tree is a restricted class of trees for which $k$ is at most 2. An inte
 
 </div>
 </div>
+
+<button onclick="prev()">⬅️ Previous</button>
+<button onclick="next()">Next ➡️</button>
+
 The height and size of a binary tree play a crucial role in analyzing the time complexity of algorithms. The figures below explain these elements. The definitions are extendable to a generic tree structure in a natural way, considering the $k$ children or $k$ subtrees of a node. 
 <div align="center">
  
@@ -131,5 +135,4 @@ The number of nodes can be controlled by a backend variable <tt>MAX_NODES</tt> i
 
 
 The front has several functions:
-<button onclick="prev()">⬅️ Previous</button>
-<button onclick="next()">Next ➡️</button>
+
