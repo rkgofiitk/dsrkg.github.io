@@ -131,3 +131,5 @@ The number of nodes can be controlled by a backend variable <tt>MAX_NODES</tt> i
 
 
 The front has several functions:
+<button onclick="prev()">⬅️ Previous</button>
+<button onclick="next()">Next ➡️</button>
