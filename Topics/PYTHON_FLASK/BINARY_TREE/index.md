@@ -16,9 +16,11 @@ layout: default
 We borrow terminology from a family tree to describe relationships between the nodes in a tree. The terminology is valid for generic tree structures. A tree consists of a collection of nodes. A node is a non-divisible unit of information (a record) in a large data structure, such as a linked list.
 It may contain links (pointers) to other nodes. One node is designated as the root of the tree. The remaining nodes are classified either as <b>leaves</b> or <b>internal nodes</b>.  Formally, a tree represents a hierarchical structure defined recursively as follows:
 
-<strong>Definition: </strong> A tree $T$ can be empty, or may consist of
+**Definition:**  
+A tree $T$ can be empty, or may consist of:
+
 - One special node $r$ called the root.
-- A set of trees $k$ trees $T_1, T_2, \ldots, T_k$ (possibly empty) with roots $r_1, r_2, \ldots, r_k$ respectively.
+- A set of $k$ trees $T_1, T_2, \\ldots, T_k$ (possibly empty) with roots $r_1, r_2, \\ldots, r_k$ respectively.
 
 The trees $T_1, T_2, \ldots, T_k$ are called subtrees of $T$. The roots $r_1, r_2, \ldots, r_k$ of subtrees are called children of $r$, and the node $r$ contains pointers to reach each of its children. The nodes in a tree $T$ are, thus, accessible through its root $r$. 
 
