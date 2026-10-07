@@ -8,7 +8,7 @@ layout: default
 
 <div class="section" id="s1">
 
-### General Tree Terminology
+<h3> General Tree Terminology</h3>
 
 We borrow terminology from a family tree to describe relationships between the nodes in a tree. The terminology is valid for generic tree structures. A tree consists of a collection of nodes. A node is a non-divisible unit of information (a record) in a large data structure, such as a linked list.
 It may contain links (pointers) to other nodes. One node is designated as the root of the tree. The remaining nodes are classified either as <b>leaves</b> or <b>internal nodes</b>.  Formally, a tree represents a hierarchical structure defined recursively as follows:
@@ -25,7 +25,7 @@ To explore a tree, we always start from the root. Starting from the root, we can
 
 <div class="section" id="s2">
 
- ### Binary Tree
+<h3>Binary Tree</h3> 
 
 A Binary Tree is a restricted class of trees for which $k$ is at most 2. An internal node in a binary tree has at least one child and at most 2 children, while a leaf node has no children. The two subtrees of the root in a Binary Tree are known as the left and right subtrees. A link to the left child of a node is called the <b>left branch</b>, and the link to a right child is called the <b>right branch</b>. If a binary tree is left-skewed or right-skewed, it resembles a linear list. Similarly, if the left or right child links of the internal nodes are absent, the binary tree resembles a linked list. The configurations of a binary tree representing a linked list are shown in the figure below. The reader may notice that any  tree where each internal node has one child resembles a linked list.
 
@@ -36,8 +36,11 @@ A Binary Tree is a restricted class of trees for which $k$ is at most 2. An inte
 | <img src="images/left_skewed_binary_tree.png" width="60%"> | <img src="images/right_skewed_binary_tree.png" width="60%" > |  <img src="images/skewed_binary_tree.png" width="60%"> |
 
 </div>
+</div>
 
-### Node Structure, Height, and Size 
+<div class="section" id="s3">
+
+ <h3>Node Structure, Height, and Size </h3>
 
  A most basic description of a node in a binary tree with left and right child links is provided in the image below.
 <div align="center">
@@ -47,9 +50,6 @@ A Binary Tree is a restricted class of trees for which $k$ is at most 2. An inte
 | <img src="images/nodeStruct.png" width="60%"> |
 
 </div>
-</div>
-
-<div class="section" id="s3">
  
 The height and size of a binary tree play a crucial role in analyzing the time complexity of algorithms. The figures below explain these elements. The definitions are extendable to a generic tree structure in a natural way, considering the $k$ children or $k$ subtrees of a node. 
 <div align="center">
@@ -60,12 +60,13 @@ The height and size of a binary tree play a crucial role in analyzing the time c
 
 </div>
 
-The figure shows that we compute the height of a binary tree as the maximum of the heights of its left and right subtrees, plus 1 for the root node. The size of a binary tree is equal to the number of nodes in it. So, we can compute the size by finding the sizes of its left and right subtrees, summing both size and adding 1 to it. 
+The figure shows that we compute the height of a binary tree as the maximum of the heights of its left and right subtrees, plus 1 for the root node. The size of a binary tree is equal to the number of nodes in it. So, we can compute the size by finding the sizes of its left and right subtrees, summing them, and adding 1. 
+
 </div>
 
 <div class="section" id="s4">
  
-### Traversals of a Binary Tree
+<h3>Traversals of a Binary Tree</h3>
 
 How do we process data represented as a binary tree? We will consider each node that only stores one unit of data. However, in practice, it will depend on the nature of the requirements for solving a problem at hand. The fundamental operation involved in processing a binary tree data structure is a traversal. The traversal is essentially a <b>walk</b> around the branches of a Binary Tree starting from the root. The figure below illustrates a walk around a binary tree.
 
@@ -94,7 +95,7 @@ An alternative way to define traversals is to do so recursively, using a tree's 
 </div>
 <div class="section" id="s5">
  
- ### Implementation 
+<h3>Implementation </h3>
 
 Implementing operations of a Binary Tree is much simpler than those of a linked list. The idea implementation here is limited to the traversals. The mutating operations, such as insertion, deletion, or search operations important. But it will not be possible to implement these operations unless we impose a partial ordering on the elements of the left and right subtrees. Binary Search Trees (BSTs), which we plan to present next, impose an ordering on nodes based on whether they belong to the left or right subtrees of a given node.  
 
@@ -123,7 +124,7 @@ The other prominent operations in the backend are traversals. Traversal algorith
 
 <div class="section" id="s6">
  
-### Frontend for Animation 
+<h3> Frontend for Animation </h3>
 
 The animation is handled by embedded JavaScript in the <tt>index.html</tt> file. The animation's folder structure is shown in the image below.
 
@@ -141,8 +142,12 @@ It is possible to separate JavaScript from HTML by creating a folder <tt>static<
 
 The number of nodes can be controlled by a backend variable <tt>MAX_NODES</tt> in <tt>btree_operations.py</tt>. Since the generation of the binary tree is random and returns a list of nodes, the frontend animates the display in the canvas's visual area.   
 
+</div>
 
+<div class="section" id="s7">
+ <h3>Frontend Functions</h3>
 The front has several functions:
 </div>
+
 <button onclick="prev()">⬅️ Previous</button>
 <button onclick="next()">Next ➡️</button>
