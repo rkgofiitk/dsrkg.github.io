@@ -18,13 +18,13 @@ button { margin: 10px; }
   };
 
 let current = 1;
-const total = 7;
+const sections = document.querySelectorAll(".section");
+const total = sections.length;
 
 function show(n) {
-  for (let i = 1; i <= total; i++) {
-    const el = document.getElementById("s"+i);
-    if (el) el.style.display = (i===n) ? "block" : "none";
-  }
+  sections.forEach((el, i) => {
+    el.style.display = (i+1 === n) ? "block" : "none";
+  });
 }
 
 function next() { if (current < total) { current++; show(current); } }
@@ -34,4 +34,5 @@ document.addEventListener("DOMContentLoaded", () => {
   show(current);
 });
 </script>
+
 
