@@ -50,6 +50,7 @@ A Binary Tree is a restricted class of trees for which $k$ is at most 2. An inte
 </div>
 
 <div class="section" id="s3">
+ 
 The height and size of a binary tree play a crucial role in analyzing the time complexity of algorithms. The figures below explain these elements. The definitions are extendable to a generic tree structure in a natural way, considering the $k$ children or $k$ subtrees of a node. 
 <div align="center">
  
@@ -61,7 +62,9 @@ The height and size of a binary tree play a crucial role in analyzing the time c
 
 The figure shows that we compute the height of a binary tree as the maximum of the heights of its left and right subtrees, plus 1 for the root node. The size of a binary tree is equal to the number of nodes in it. So, we can compute the size by finding the sizes of its left and right subtrees, summing both size and adding 1 to it. 
 </div>
+
 <div class="section" id="s4">
+ 
 ### Traversals of a Binary Tree
 
 How do we process data represented as a binary tree? We will consider each node that only stores one unit of data. However, in practice, it will depend on the nature of the requirements for solving a problem at hand. The fundamental operation involved in processing a binary tree data structure is a traversal. The traversal is essentially a <b>walk</b> around the branches of a Binary Tree starting from the root. The figure below illustrates a walk around a binary tree.
@@ -119,6 +122,7 @@ The other prominent operations in the backend are traversals. Traversal algorith
 </div>
 
 <div class="section" id="s6">
+ 
 ### Frontend for Animation 
 
 The animation is handled by embedded JavaScript in the <tt>index.html</tt> file. The animation's folder structure is shown in the image below.
