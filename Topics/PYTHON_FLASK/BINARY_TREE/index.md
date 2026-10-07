@@ -6,6 +6,10 @@ layout: default
 
 ## Binary Tree Animation
 
+<div class="section" id="s1">
+
+
+
 ### General Tree Terminology
 
 We borrow terminology from a family tree to describe relationships between the nodes in a tree. The terminology is valid for generic tree structures. A tree consists of a collection of nodes. A node is a non-divisible unit of information (a record) in a large data structure, such as a linked list.
@@ -43,7 +47,7 @@ A Binary Tree is a restricted class of trees for which $k$ is at most 2. An inte
 | <img src="images/nodeStruct.png" width="60%"> |
 
 </div>
-
+</div>
 The height and size of a binary tree play a crucial role in analyzing the time complexity of algorithms. The figures below explain these elements. The definitions are extendable to a generic tree structure in a natural way, considering the $k$ children or $k$ subtrees of a node. 
 <div align="center">
  
