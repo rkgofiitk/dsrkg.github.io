@@ -51,10 +51,13 @@ The Config I in the figure below represents a tri-node structure $a-b-c$, which 
   |:----------:|:----------:|
  | <img src="images/avlLRrotation.png" width="80%" alt-text="Single left rotation"> | <img src="images/avlRLrotation.png" width="80%" alt-text="Single right rotation"> |
 
-A left rotation on $b$ in Config I turns the tri-node into a Zig-Zig configuration. Now, a single right rotation can fix the balance factors as explained by Config II of the previous figure. Similarly, a right rotation on $b$ in Config II turns it into a Zag-Zag configuration, followed by a single left rotation.
+A left rotation on $b$ in Config I turns the tri-node into a Zig-Zig configuration. Now, a single right rotation can fix the balance factors as explained by Config II of the previous figure. Similarly, a right rotation about $b$ in Config II yields a Zag-Zag configuration, followed by a single left rotation.
 
 Why is double rotation required at all? The figure below provides an explanation. 
 
  | Configuration |
   |:----------:|
- | <img src="images/need_for_DR.png" width="80%" alt-text="Single left rotation"> | 
+ | <img src="images/need_for_DR.png" width="70%" alt-text="Single left rotation"> |
+ 
+ Applying a single rotation on the left most configuration will lead to second. 
+ 
