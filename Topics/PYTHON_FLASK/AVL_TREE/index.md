@@ -19,12 +19,6 @@ A Double Rotation is a mix of two single rotation types. The combination could b
   |:----------:|:----------:|
  | <img src="images/avlLLrotation.png" width="80%" alt-text="Single left rotation"> | <img src="images/avlRRrotation.png" width="80%" alt-text="Single right rotation"> |
 
-
-
- 
-
-
-
 Before going further, we define the balance factor (bf) of a node in a binary search tree (BST):
 - It is the difference between the heights of a node's left and right subtrees.
 
@@ -59,5 +53,5 @@ Why is double rotation required at all? The figure below provides an explanation
   |:----------:|
  | <img src="images/need_for_DR.png" width="70%" alt-text="Single left rotation"> |
  
- Applying a single rotation on the left most configuration will lead to second. 
+Applying an LL rotation to the leftmost configuration yields the middle configuration; now applying an RR rotation to the zig-zag configuration returns to the initial zig-zag configuration. So, a single rotation won't be able to rebalance the tree. 
  
