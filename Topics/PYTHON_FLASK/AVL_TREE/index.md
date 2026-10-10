@@ -49,7 +49,7 @@ A left rotation on $b$ in Config I turns the tri-node into a Zig-Zig configurati
 
 Why is double rotation required at all? The figure below provides an explanation. 
 
- | Configuration |
+ | Why Double Rotation? |
   |:----------:|
  | <img src="images/need_for_DR.png" width="70%" alt-text="Single left rotation"> |
  
