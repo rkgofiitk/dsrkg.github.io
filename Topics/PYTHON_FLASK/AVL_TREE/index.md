@@ -69,3 +69,13 @@ A zig-zag pattern that represents a mirror of above configuration found in an un
 | <img src="images/Double_RL_Rotation.png" width="70%" alt-text="Double RL rotation"> |
 
 We have understood how rotations rebalance the tree when applied to the node postions where balance factors are disturbed. Rotations are applied bottom up along the tree path from the depth-most unbalanced node to the root. One important fact that we did not mention until now is that an AVL tree is a binary search tree (BST). Therefore, insert and delete operations on BSTs are the two mutating operations that disturb the balance factors of nodes in AVL trees. Therefore, rotations are needed only when an insertion or a deletion occurs in an AVL tree.
+
+### Implementation
+
+The implementation of AVL extends on the BST implmentation discussed earlier. It adds two fields to the structure of a node keep track of its balance factor and hegiht. For operations on BST, it adds:
+- rotate_left,
+- rotate_right, 
+- update_height_and_balance, and
+- replace_node
+
+We don't need double rotation operation as it can be implemented using rotate_left and rotate_right. The operation for update_height_and_balance is used to update height and balance fields of a node after insertion or deletion takes place. The last operaiton swaps the keys after a rotation. 
