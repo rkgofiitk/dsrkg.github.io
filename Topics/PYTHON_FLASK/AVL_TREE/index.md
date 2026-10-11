@@ -55,10 +55,15 @@ Why is double rotation required at all? The figure below provides an explanation
  
 Suppose we apply an LL rotation to the leftmost configuration. The configuration turns into a zig-zig. If we apply an RR rotation to a zig-zag configuration, then it returns the initial zig-zag configuration. So, a single rotation won't rebalance such a structure. 
 
-How does a double rotation solve a rebalancing problem like the one described above? To understand it, consider the example shown below. Focus on the zig-zag pattern. After an LL rotation is applied, the result is a zigzag pattern, as indicated by the structure in the middle. Now, an RR rotation is applied to the same node position, resulting in a double rotation. The final structure to the right is a rebalanced tree. 
+How does a double rotation solve a rebalancing problem like the one described above? To understand it, consider the example shown below. Focus on the zig-zag pattern. After an LL rotation is applied, the result is a zig-zag pattern, as indicated by the structure in the middle. Now, an RR rotation is applied to the same node position, resulting in a double rotation. The final structure to the right is a rebalanced tree. 
 
 | Double Rotation |
 |:---------------:|
 | <img src="images/Double_LR_Rotation.png" width="70%" alt-text="Double LR rotation"> |
 
- 
+A zig-zag pattern that represents a mirror of above configuration found in an unbalance tree is shown in the image below. It also requires a double rotation to rebalance the tree. This double rotation is similar to LR rotation except that the roation orders are reversed. The result is a rebalanced tree as illustrated by the right-most configuration of the tree after performing the rotation.
+
+
+| Double Rotation |
+|:---------------:|
+| <img src="images/Double_RL_Rotation.png" width="70%" alt-text="Double RL rotation"> |
